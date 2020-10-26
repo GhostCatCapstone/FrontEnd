@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "ghost-cat-app"
+    }
+  },
+  "defaultProject": "ghost-cat-app",
+  "cli": {
+    "analytics": false
+  }
 }
