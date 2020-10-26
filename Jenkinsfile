@@ -4,19 +4,19 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'echo Compile front end steps here; pwd'
+                sh 'cd ghost-cat-app; npm install; npm run ng build --prod;'
             }
         }
         
         stage('test') {
             steps {
-                sh 'echo Test front end steps here'
+                sh 'ng test'
             }
         }
         
         stage('deploy') {
             steps {
-                sh 'echo Deploy front end steps here'
+                sh 'rm -r /var/www/html/*; mv dist/* /var/www/html/; sudo service httpd start;'
             }
         }
     }
