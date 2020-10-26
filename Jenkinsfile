@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'echo Compile front end steps here'
+                sh 'echo Compile front end steps here; pwd'
             }
         }
         
