@@ -8,9 +8,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SendrequesttoserverComponent } from './sendrequesttoserver/sendrequesttoserver.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thumbnails-page.component';
 
 @NgModule({
-  declarations: [AppComponent, SendrequesttoserverComponent],
+  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
