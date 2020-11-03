@@ -12,9 +12,10 @@ import { SendrequesttoserverComponent } from './sendrequesttoserver/sendrequestt
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
 import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thumbnails-page.component';
+import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
 
 @NgModule({
-  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, ModalComponent ],
+  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, GhostCatLoginComponent, ModalComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
