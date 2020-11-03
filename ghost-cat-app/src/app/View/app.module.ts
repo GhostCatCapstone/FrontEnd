@@ -11,9 +11,10 @@ import { AppComponent } from './app.component';
 import { SendrequesttoserverComponent } from './sendrequesttoserver/sendrequesttoserver.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
+import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thumbnails-page.component';
 
 @NgModule({
-  declarations: [AppComponent, SendrequesttoserverComponent, ModalComponent],
+  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, ModalComponent ],
   imports: [
     BrowserModule,
     AppRoutingModule,
