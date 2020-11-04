@@ -1,1 +1,39 @@
-<p>image-thumbnails-page goes here</p>
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="image-thumbnails-page.component.css">
+</head>
+<body>
+        <div id="block_container">
+                <div id ="previousPage" >
+                    <button class="button" type="button">Previous Page</button>
+                </div>
+               <div id ="nextPage" >
+                   <button class="button" type="button">Next Page</button>
+               </div>
+           </div>
+           
+    <div>
+        <div id ="currentQuery" >
+            <button class="button" type="button">Current Filters</button>
+        </div>
+        <div id ="changeQuery" >
+            <button class="button" type="button">Change Filters</button>
+        </div>
+    </div>
+
+    <p><i class="arrow right"></i></p>
+    <p><i class="arrow left"></i></p>
+    <div class ="wrapper" >
+        <div  *ngFor="let image of images" >
+            <img src='{{image}}'/>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>
+
+
+
