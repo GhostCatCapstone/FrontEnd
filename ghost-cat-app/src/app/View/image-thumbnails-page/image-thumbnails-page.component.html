@@ -1,1 +1,21 @@
-<p>image-thumbnails-page goes here</p>
+<gallery
+  id="basic-test"
+  [items]="items"
+  [itemTemplate]="itemTemplate"
+  [gestures]="false"
+>
+</gallery>
+
+<ng-template
+  #itemTemplate
+  let-index="index"
+  let-type="type"
+  let-data="data"
+  let-currIndex="currIndex"
+>
+  <!-- Image Details Component goes here -->
+  <app-image-details
+    [src]="data.src"
+    [description]="data.description"
+  ></app-image-details>
+</ng-template> 
