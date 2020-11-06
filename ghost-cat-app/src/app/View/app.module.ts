@@ -13,9 +13,12 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ModalComponent } from './modal/modal.component';
 import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thumbnails-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
+import { GalleryModule } from 'ng-gallery';
+import { GALLERY_CONFIG } from 'ng-gallery';
+import { ImageDetailsComponent } from './image-details/image-details.component';
 
 @NgModule({
-  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, GhostCatLoginComponent, ModalComponent],
+  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, GhostCatLoginComponent, ModalComponent, ImageDetailsComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -25,8 +28,17 @@ import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.compon
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
+    GalleryModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: GALLERY_CONFIG,
+      useValue: {
+        dots: true,
+        imageSize: 'cover'
+      }
+    }
+  ],
   bootstrap: [AppComponent],
   entryComponents: [ModalComponent],
 })
