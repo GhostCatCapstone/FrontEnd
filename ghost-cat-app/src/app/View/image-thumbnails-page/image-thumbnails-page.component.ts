@@ -9,42 +9,99 @@ import { Gallery, GalleryItem } from 'ng-gallery';
 export class ImageThumbnailsPageComponent implements OnInit {
   items: GalleryItem[];
 
-  imageData = [
+  public imageData = [
     {
       src: 'assets/GhostCatLogo.png',
       thumb: 'assets/GhostCatLogo.png',
-      description: 'this is my description',
+      animals: [
+        'one',
+        'horse',
+        'cow',
+      ],
+      metadata: [
+        'one',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+      ]
     },
     {
       src: 'assets/GhostCatLogo.png',
       thumb: 'assets/GhostCatLogo.png',
-      description: 'this is my 10 description',
+      animals: [
+        'two',
+        'horse',
+        'cow',
+      ],
+      metadata: [
+        'two',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+      ]
     },
     {
-      src: 'assets/GhostCatLogo.png',
-      thumb: 'assets/GhostCatLogo.png',
-      description: 'this is my 3 description',
+      src: 'https://image.shutterstock.com/image-photo/toronto-super-wide-panorama-260nw-165404111.jpg',
+      thumb: 'https://image.shutterstock.com/image-photo/toronto-super-wide-panorama-260nw-165404111.jpg',
+      animals: [
+        'three',
+        'horse',
+        'cow',
+      ],
+      metadata: [
+        'three',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+      ]
     },
     {
-      src: 'assets/GhostCatLogo.png',
-      thumb: 'assets/GhostCatLogo.png',
-      description: 'this is my 4 description',
+      src: 'https://img.pngio.com/tall-png-6-png-image-tall-png-354_864.png',
+      thumb: 'https://img.pngio.com/tall-png-6-png-image-tall-png-354_864.png',
+      animals: [
+        'four',
+        'horse',
+        'cow',
+      ],
+      metadata: [
+        'four',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+        'four',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+        'four',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+        'four',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+        'four',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+        'four',
+        'Camera make: CUDDEBACK',
+        'Camera model: Ambush',
+      ]
     },
   ];
 
-  constructor(public gallery: Gallery) {}
+  public currIndex: number = 0;
+
+  constructor(public gallery: Gallery) { }
 
   ngOnInit() {
     // Note that src is not defined, instead we have observable
-
     this.items = this.imageData.map(
       (item) =>
         new CustomItem({
           src: item.src,
           thumb: item.thumb,
-          description: item.description,
+          animals: item.animals,
+          metadata: item.metadata,
         })
     );
+  }
+
+  public indexChanged(event) {
+    this.currIndex = event.currIndex;
   }
 }
 

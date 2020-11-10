@@ -1,21 +1,13 @@
-<gallery
-  id="basic-test"
-  [items]="items"
-  [itemTemplate]="itemTemplate"
-  [gestures]="false"
->
-</gallery>
+<div class="thumbnails-page">
+  <gallery class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"
+    (indexChange)="indexChanged($event)">
+  </gallery>
 
-<ng-template
-  #itemTemplate
-  let-index="index"
-  let-type="type"
-  let-data="data"
-  let-currIndex="currIndex"
->
-  <!-- Image Details Component goes here -->
-  <app-image-details
-    [src]="data.src"
-    [description]="data.description"
-  ></app-image-details>
-</ng-template> 
+  <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+    <!-- Image Details Component goes here -->
+    <app-image-details [src]="data.src"></app-image-details>
+  </ng-template>
+
+  <app-sidebar [animals]="imageData[currIndex].animals" [metadata]="imageData[currIndex].metadata">
+  </app-sidebar>
+</div>

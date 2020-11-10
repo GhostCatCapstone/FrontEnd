@@ -10,15 +10,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SendrequesttoserverComponent } from './sendrequesttoserver/sendrequesttoserver.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ModalComponent } from './modal/modal.component';
 import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thumbnails-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
 import { GalleryModule } from 'ng-gallery';
 import { GALLERY_CONFIG } from 'ng-gallery';
 import { ImageDetailsComponent } from './image-details/image-details.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
-  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, GhostCatLoginComponent, ModalComponent, ImageDetailsComponent],
+  declarations: [AppComponent, SendrequesttoserverComponent, ImageThumbnailsPageComponent, GhostCatLoginComponent, ImageDetailsComponent, SidebarComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -28,7 +28,7 @@ import { ImageDetailsComponent } from './image-details/image-details.component';
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
-    GalleryModule
+    GalleryModule,
   ],
   providers: [
     {
@@ -40,6 +40,6 @@ import { ImageDetailsComponent } from './image-details/image-details.component';
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ModalComponent],
+  entryComponents: [],
 })
 export class AppModule { }

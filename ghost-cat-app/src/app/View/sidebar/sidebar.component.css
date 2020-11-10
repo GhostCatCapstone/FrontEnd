@@ -1,0 +1,37 @@
+.info {
+    width: 360px;
+    height: 100%;
+    padding: 32px;
+    box-sizing: border-box;
+    align-self: start;
+    overflow-y: scroll;
+  }
+  
+  .animal-info {
+    margin-bottom: 32px;
+  }
+  
+  .metadata-info {
+    margin-bottom: 32px;
+  }
+  
+  .animal-text {
+    font-size: 10pt;
+    margin-top: 0px;
+  }
+  
+  .metadata-text {
+    font-size: 10pt;
+    margin-top: 0px;
+  }
+
+  h3 {
+    margin-top: 0px;
+    margin-bottom: 32px;
+  }
+  
+  h5 {
+    margin-top: 0px;
+    margin-bottom: 16px;
+  }
+  
