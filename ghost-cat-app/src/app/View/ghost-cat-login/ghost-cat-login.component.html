@@ -1,5 +1,6 @@
     <head>
         <title></title>
+        <base href="/">
     </head>
     
     <body>
@@ -13,7 +14,11 @@
             <input type="text" placeholder="Password">
         </div>
         <div class="buttons"> 
-            <button>Login</button>
-            <button>Forgot Password</button>
+            <button (click)="goToPage('search')">Login</button>
+            <button (click)="goToPage('forgotpassword')">Forgot Password</button>
         </div>
+        <p>
+            <button (click)="goToPage('register')">Test register link</button>
+            <button (click)="goToPage('reset')">Test password reset link</button>
+        </p>
     </body>

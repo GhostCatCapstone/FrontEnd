@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'app-ghost-cat-login',
-  templateUrl: './ghost-cat-login.component.html',
-  styleUrls: ['./ghost-cat-login.component.css']
+  selector: 'app-password-reset',
+  templateUrl: './password-reset.component.html',
+  styleUrls: ['./password-reset.component.css']
 })
-export class GhostCatLoginComponent implements OnInit {
+export class PasswordResetComponent implements OnInit {
 
   constructor(private router:Router) { }
 
