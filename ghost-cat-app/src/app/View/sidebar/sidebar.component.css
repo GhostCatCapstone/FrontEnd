@@ -1,4 +1,4 @@
-.info {
+.details {
     width: 360px;
     height: 100%;
     padding: 32px;
@@ -7,22 +7,15 @@
     overflow-y: scroll;
   }
   
-  .animal-info {
+  .info {
     margin-bottom: 32px;
   }
   
-  .metadata-info {
-    margin-bottom: 32px;
-  }
-  
-  .animal-text {
+  .text {
     font-size: 10pt;
-    margin-top: 0px;
-  }
-  
-  .metadata-text {
-    font-size: 10pt;
-    margin-top: 0px;
+    margin-bottom: 16px;
+    display: flex;
+    white-space: pre-wrap;
   }
 
   h3 {
@@ -35,3 +28,10 @@
     margin-bottom: 16px;
   }
   
+  .form {
+    width: 100%;
+  }
+  
+  .full-width {
+    width: 100%;
+  }

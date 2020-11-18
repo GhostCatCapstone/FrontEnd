@@ -1,3 +1,4 @@
 <div class="image-details-container">
-    <img [src]="src" alt="There was an error displaying this image" />
+    <canvas #canvas width="300" height="150" (mousedown)="mouseDown($event)" (mouseup)="mouseUp($event)"
+        (mousemove)="mouseMove($event)" (dblclick)="dblClick($event)"></canvas>
 </div>

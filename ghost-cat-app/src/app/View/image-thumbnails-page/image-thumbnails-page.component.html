@@ -8,6 +8,8 @@
     <app-image-details [src]="data.src"></app-image-details>
   </ng-template>
 
-  <app-sidebar [animals]="imageData[currIndex].animals" [metadata]="imageData[currIndex].metadata">
+  <app-sidebar [animalLabels]="imageData[currIndex].animalLabels"
+    [animalPercentages]="imageData[currIndex].animalPercentages" [metadataLabels]="imageData[currIndex].metadataLabels"
+    [metadataValues]="imageData[currIndex].metadataValues">
   </app-sidebar>
 </div>
