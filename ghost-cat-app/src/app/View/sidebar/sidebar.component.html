@@ -1,17 +1,27 @@
-<div class="info">
+<div class="details">
     <h3>Image Details</h3>
 
-    <div class="animal-info">
+    <div class="info">
         <h5>Animals</h5>
-        <p class="animal-text" *ngFor="let animal of animals">
-            {{animal}}
-        </p>
+        <div class="text" *ngFor="let animal of animalPercentages; let i = index">
+            <form class="form">
+                <mat-form-field class="full-width">
+                    <mat-label>{{animalLabels[i]}}</mat-label>
+                    <input matInput value="{{animal}}" readonly>
+                </mat-form-field>
+            </form>
+        </div>
     </div>
 
-    <div class="metadata-info">
+    <div class="info">
         <h5>Metadata</h5>
-        <p class="metadata-text" *ngFor="let m of metadata">
-            {{m}}
-        </p>
+        <div class="text" *ngFor="let metadata of metadataValues; let i = index">
+            <form class="form">
+                <mat-form-field class="full-width">
+                    <mat-label>{{metadataLabels[i]}}</mat-label>
+                    <input matInput value="{{metadata}}" readonly>
+                </mat-form-field>
+            </form>
+        </div>
     </div>
 </div>
