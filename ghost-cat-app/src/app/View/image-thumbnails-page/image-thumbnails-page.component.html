@@ -1,15 +1,28 @@
-<div class="thumbnails-page">
-  <gallery class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"
-    (indexChange)="indexChanged($event)">
-  </gallery>
+<head>
+  <base href="/">
+</head>
 
-  <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
-    <!-- Image Details Component goes here -->
-    <app-image-details [src]="data.src"></app-image-details>
-  </ng-template>
+<body>
+  <div class="buttons"> 
+      <button (click)="goToPage('search')">New Search</button>
+      <p></p>
+      <button (click)="goToPage('settings')">Account Settings</button>
+      <p></p>
+      <button (click)="goToPage('login')">Logout</button>
+  </div>
+  <div class="thumbnails-page">
+    <gallery class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"
+      (indexChange)="indexChanged($event)">
+    </gallery>
 
-  <app-sidebar [animalLabels]="imageData[currIndex].animalLabels"
+    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+      <!-- Image Details Component goes here -->
+      <app-image-details [src]="data.src"></app-image-details>
+    </ng-template>
+
+    <app-sidebar [animalLabels]="imageData[currIndex].animalLabels"
     [animalPercentages]="imageData[currIndex].animalPercentages" [metadataLabels]="imageData[currIndex].metadataLabels"
     [metadataValues]="imageData[currIndex].metadataValues">
   </app-sidebar>
-</div>
+  </div>
+</body>
