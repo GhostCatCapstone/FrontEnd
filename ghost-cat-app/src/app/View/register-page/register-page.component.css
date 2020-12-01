@@ -1,28 +1,9 @@
 body {
     text-align: center;  
+    font-family: Arial, Helvetica, sans-serif
 }
 
 .logo {
     height: 20%;
     width: 45%;
-}
-
-input {
-    width: 30%;
-    padding: .5%;
-    margin-bottom: 2%;
-    border-radius: 5px;
-    border: 1px solid #707070;
-}
-
-button {
-    width: 10%;
-    padding: .5%;
-    margin-right: 5.5%;
-    margin-left: 5.5%;
-    background-color: #00AEEF;
-    color: #FFFFFF;
-    border-radius: 5px;
-    border: 1px solid #707070;
-
 }
