@@ -1,28 +1,42 @@
 <head>
-  <base href="/">
+  <base href="/" />
 </head>
 
 <body>
-  <div class="buttons"> 
-      <button (click)="goToPage('search')">New Search</button>
-      <p></p>
-      <button (click)="goToPage('settings')">Account Settings</button>
-      <p></p>
-      <button (click)="goToPage('login')">Logout</button>
+  <div class="buttons">
+    <button (click)="goToPage('search')">New Search</button>
+    <p></p>
+    <button (click)="goToPage('settings')">Account Settings</button>
+    <p></p>
+    <button (click)="goToPage('login')">Logout</button>
   </div>
   <div class="thumbnails-page">
-    <gallery class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"
-      (indexChange)="indexChanged($event)">
+    <gallery
+      class="gallery"
+      [items]="items"
+      [itemTemplate]="itemTemplate"
+      [gestures]="false"
+      (indexChange)="indexChanged($event)"
+    >
     </gallery>
 
-    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+    <ng-template
+      #itemTemplate
+      let-index="index"
+      let-type="type"
+      let-data="data"
+      let-currIndex="currIndex"
+    >
       <!-- Image Details Component goes here -->
       <app-image-details [src]="data.src"></app-image-details>
     </ng-template>
 
-    <app-sidebar [animalLabels]="imageData[currIndex].animalLabels"
-    [animalPercentages]="imageData[currIndex].animalPercentages" [metadataLabels]="imageData[currIndex].metadataLabels"
-    [metadataValues]="imageData[currIndex].metadataValues">
-  </app-sidebar>
+    <app-sidebar
+      [animalLabels]="items[currIndex].data.animalLabels"
+      [animalPercentages]="items[currIndex].data.animalPercentages"
+      [metadataLabels]="items[currIndex].data.metadataLabels"
+      [metadataValues]="items[currIndex].data.metadataValues"
+    >
+    </app-sidebar>
   </div>
 </body>
