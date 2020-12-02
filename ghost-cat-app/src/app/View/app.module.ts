@@ -37,7 +37,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     {
       provide: GALLERY_CONFIG,
       useValue: {
-        dots: true,
+        dots: false,
         imageSize: 'cover'
       }
     }

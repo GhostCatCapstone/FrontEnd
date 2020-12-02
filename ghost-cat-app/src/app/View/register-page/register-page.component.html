@@ -1,10 +1,38 @@
 <head>
-    <title>Private Register Page</title>
+    <title></title>
     <base href="/">
 </head>
+
 <body>
-    <p>Register Page</p>
-    <div class="buttons"> 
-        <button (click)="goToPage('login')">Register</button>
+    <div>
+        <img class="logo"src="assets/GhostCatLogo.png" alt="Ghost Cat Logo" />
     </div>
+    <div class="inputs">
+        <input id="EmailUserInput" type="text" placeholder="Email">
+    </div>
+    <div class="inputs">
+        <input id="NewPasswordUserInput" type="text" placeholder="New Password">
+    </div>
+    <div class="inputs">
+        <input id="RetypePasswordUserInput" type="text" placeholder="Retype Password">
+    </div>
+    <div class="inputs">
+        <input id="FirstNameUserInput" type="text" placeholder="First Name">
+    </div>
+    <div class="inputs">
+        <input id="LastNameUserInput" type="text" placeholder="Last Name">
+    </div>
+    <div class="inputs">
+        <input id="PhoneUserInput" type="text" placeholder="Phone">
+    </div>
+    <div class="inputs">
+        <input id="CompanyUserInput" type="text" placeholder="Company">
+    </div>
+    <div class="buttons"> 
+        <!--Have the button take user to register page afterward-->
+        <button (click)="sendRegisterRequest($event)">Register</button>
+    </div>
+    <p>
+        <!--<button (click)="goToPage('register')">Test register link</button>-->
+    </p>
 </body>
