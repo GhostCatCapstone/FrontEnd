@@ -8,7 +8,6 @@ import { MaterialModule } from './material.module';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SendrequesttoserverComponent } from './sendrequesttoserver/sendrequesttoserver.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GalleryModule } from 'ng-gallery';
 import { GALLERY_CONFIG } from 'ng-gallery';
@@ -21,7 +20,17 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 @NgModule({
-  declarations: [AppComponent, SendrequesttoserverComponent, routingComponents, ImageDetailsComponent, SidebarComponent, ForgotPasswordComponent, SearchPageComponent, PasswordResetComponent, RegisterPageComponent, AccountSettingsComponent],
+  declarations: [
+    AppComponent,
+    routingComponents,
+    ImageDetailsComponent,
+    SidebarComponent,
+    ForgotPasswordComponent,
+    SearchPageComponent,
+    PasswordResetComponent,
+    RegisterPageComponent,
+    AccountSettingsComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -45,9 +54,4 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
   bootstrap: [AppComponent],
   entryComponents: [],
 })
-
-export class AppModule { 
-  
-}
-
-
+export class AppModule {}
