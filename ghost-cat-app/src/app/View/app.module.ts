@@ -18,6 +18,7 @@ import { SearchPageComponent } from './search-page/search-page.component';
 import { PasswordResetComponent } from './password-reset/password-reset.component';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { InternalRegisterPageComponent } from './internal-register-page/internal-register-page.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     PasswordResetComponent,
     RegisterPageComponent,
     AccountSettingsComponent,
+    InternalRegisterPageComponent,
   ],
   imports: [
     BrowserModule,

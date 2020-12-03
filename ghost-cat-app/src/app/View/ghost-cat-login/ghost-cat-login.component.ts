@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import { ServerFacade } from '../../Proxy/ServerFacade';
+import { LoginRequest } from '../../Model/LoginRequest';
 
 @Component({
   selector: 'app-ghost-cat-login',
@@ -21,6 +22,7 @@ export class GhostCatLoginComponent implements OnInit {
   public sendLoginRequest(event: Event): void {
     var email = (<HTMLInputElement>document.getElementById("EmailUserInput")).value;
     var password = (<HTMLInputElement>document.getElementById("PasswordUserInput")).value;
-    this.server.login(email, password, this.router);
+    const loginRequest: LoginRequest = new LoginRequest(email, password);
+    this.server.login(loginRequest, this.router);
   }
 }

@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import {Router} from '@angular/router';
 import { ImageQueryRequest } from '../Model/ImageQueryRequest';
 import { ImageQueryResponse } from '../Model/ImageQueryResponse';
+import { LoginRequest } from '../Model/LoginRequest';
 
 @Injectable({
   providedIn: 'root',
@@ -22,34 +23,16 @@ export class ServerFacade {
   }
 
   public async login(
-    userIDInput: string | null,
-    passwordHashInput: string | null,
+    loginRequest: LoginRequest,
     router:Router
   ): Promise<void> {
     let url =
       'https://az5x52mixa.execute-api.us-east-1.amazonaws.com/dev/login';
 
-    let loginRequest: JSON;
     let resp: any;
 
-    //working test user
-    /*obj: any = 
-    {
-      "userID": "researcherID",
-      "passwordHash":"r4greog5httr"
-    };*/
-
-
-    let obj: any = 
-    {
-      "userID": userIDInput,
-      "passwordHash":passwordHashInput
-    };
-
-    loginRequest = <JSON>obj;
-
       this.http
-      .post<string>(url, loginRequest)
+      .post<string>(url, JSON.stringify(loginRequest))
       .pipe(catchError(this.handleError('login')))
       .subscribe({
         next(response) {
