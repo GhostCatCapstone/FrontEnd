@@ -1,28 +1,22 @@
 body {
-    text-align: center;  
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 75px 50px;
 }
 
-.logo {
-    height: 20%;
-    width: 45%;
+h1 {
+    font-weight: 200;
 }
 
-input {
-    width: 30%;
-    padding: .5%;
-    margin-bottom: 2%;
-    border-radius: 5px;
-    border: 1px solid #707070;
+div {
+    margin: 20px;
 }
+
 
 button {
     width: 10%;
     padding: .5%;
-    margin-right: 5.5%;
-    margin-left: 5.5%;
     background-color: #00AEEF;
     color: #FFFFFF;
     border-radius: 5px;
     border: 1px solid #707070;
-
 }
