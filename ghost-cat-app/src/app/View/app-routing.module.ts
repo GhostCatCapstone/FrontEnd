@@ -7,6 +7,7 @@ import {PasswordResetComponent} from './password-reset/password-reset.component'
 import {RegisterPageComponent} from './register-page/register-page.component';
 import {SearchPageComponent} from './search-page/search-page.component';
 import {GhostCatLoginComponent} from './ghost-cat-login/ghost-cat-login.component';
+import {InternalRegisterPageComponent} from './internal-register-page/internal-register-page.component';
 
 
 const routes: Routes = [
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path:'login', component: GhostCatLoginComponent},
   {path:'settings', component: AccountSettingsComponent},
   {path:'reset', component: PasswordResetComponent},
-  {path:'register', component: RegisterPageComponent}
+  {path:'register', component: RegisterPageComponent},
+  {path:'internalRegister', component: InternalRegisterPageComponent}
 ];
 
 @NgModule({
