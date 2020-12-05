@@ -28,17 +28,17 @@ export class ImageThumbnailsPageComponent implements OnInit {
     // Please note that if you want to work with dummy data, you should also comment out
     // the lines below that fetch data from the server.
 
-    // this.items = imageData.map(
-    //   (item) =>
-    //     new CustomItem({
-    //       src: item.src,
-    //       thumb: item.thumb,
-    //       animalLabels: item.animalLabels,
-    //       animalPercentages: item.animalPercentages,
-    //       metadataLabels: item.metadataLabels,
-    //       metadataValues: item.metadataValues,
-    //     })
-    // );
+     /*this.items = imageData.map(
+       (item) =>
+         new CustomItem({
+           src: item.src,
+           thumb: item.thumb,
+           animalLabels: item.animalLabels,
+           animalPercentages: item.animalPercentages,
+           metadataLabels: item.metadataLabels,
+           metadataValues: item.metadataValues,
+         })
+     );*/
 
     this.items = [
       new CustomItem({
