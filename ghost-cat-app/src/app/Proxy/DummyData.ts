@@ -1,3 +1,9 @@
+export const dummyData = {
+  researcherID: 'researcherID',
+  authToken: 'token',
+  projectID: 'projectID',
+};
+
 export const imageData = [
   {
     src: 'assets/GhostCatLogo.png',
