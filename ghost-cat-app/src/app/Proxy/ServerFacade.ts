@@ -2,10 +2,11 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { ImageQueryRequest } from '../Model/ImageQueryRequest';
 import { ImageQueryResponse } from '../Model/ImageQueryResponse';
 import { LoginRequest } from '../Model/LoginRequest';
+import { LoginResponse } from '../Model/LoginResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -24,26 +25,20 @@ export class ServerFacade {
 
   public async login(
     loginRequest: LoginRequest,
-    router:Router
+    router: Router
   ): Promise<void> {
     let url =
       'https://az5x52mixa.execute-api.us-east-1.amazonaws.com/dev/login';
 
-    let resp: any;
-
-      this.http
-      .post<string>(url, JSON.stringify(loginRequest))
+    this.http
+      .post<LoginResponse>(url, JSON.stringify(loginRequest))
       .pipe(catchError(this.handleError('login')))
       .subscribe({
-        next(response) {
-          resp = JSON.parse(JSON.stringify(response));
-          if(resp.auth_token != null){
-          
-            //alert('Got success: ' + JSON.stringify(response));
+        next(response: LoginResponse) {
+          if (response.auth_token != null) {
             router.navigate([`/search`]);
-          }
-          else{
-            alert('Error while logging in: ' + JSON.stringify(response));
+          } else {
+            alert('Error while logging in: ' + response.error_message);
           }
         },
       });
@@ -57,12 +52,24 @@ export class ServerFacade {
     lastNameInput: string | null,
     phone: string | null,
     company: string | null,
-    router:Router
+    router: Router
   ): Promise<void> {
-    alert('User id: ' + userIDInput + '\nNew Password: ' + newPasswordInput
-    + '\nRetyped Password: ' + retypePasswordInput + '\nFirst Name: ' + firstNameInput
-    + '\nLast Name: ' + lastNameInput + '\nPhone: ' + phone
-    + '\nCompany: ' + company);
+    alert(
+      'User id: ' +
+        userIDInput +
+        '\nNew Password: ' +
+        newPasswordInput +
+        '\nRetyped Password: ' +
+        retypePasswordInput +
+        '\nFirst Name: ' +
+        firstNameInput +
+        '\nLast Name: ' +
+        lastNameInput +
+        '\nPhone: ' +
+        phone +
+        '\nCompany: ' +
+        company
+    );
     //this url isn't real, need to replace with actual url once we have an endpoint.
     let url =
       'https://az5x52mixa.execute-api.us-east-1.amazonaws.com/dev/register';
@@ -76,13 +83,12 @@ export class ServerFacade {
         },
       });*/
 
-      //if the response code is success, call the login page or log them in and go to the search page. Otherwise notify that the register failed
-      if(1){
-        router.navigate([`login`]);
-      }
-      else{
-        //tell them register failed
-      }
+    //if the response code is success, call the login page or log them in and go to the search page. Otherwise notify that the register failed
+    if (1) {
+      router.navigate([`login`]);
+    } else {
+      //tell them register failed
+    }
   }
 
   /**

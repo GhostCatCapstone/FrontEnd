@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Gallery, GalleryItem } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
-import { imageData } from '../../Proxy/DummyData';
 import { ServerFacade } from '../../Proxy/ServerFacade';
 import { ImageQueryRequest } from 'src/app/Model/ImageQueryRequest';
 import { ImageQueryResponse } from 'src/app/Model/ImageQueryResponse';
+import { ClassValue } from 'src/app/Model/ClassValue';
+import { dummyData } from 'src/app/Proxy/DummyData';
 
 @Component({
   selector: 'app-image-thumbnails-page',
@@ -24,22 +25,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // This commented out code is an example of how to fill the items with dummy data
-    // Please note that if you want to work with dummy data, you should also comment out
-    // the lines below that fetch data from the server.
-
-     /*this.items = imageData.map(
-       (item) =>
-         new CustomItem({
-           src: item.src,
-           thumb: item.thumb,
-           animalLabels: item.animalLabels,
-           animalPercentages: item.animalPercentages,
-           metadataLabels: item.metadataLabels,
-           metadataValues: item.metadataValues,
-         })
-     );*/
-
     this.items = [
       new CustomItem({
         src: '',
@@ -51,20 +36,52 @@ export class ImageThumbnailsPageComponent implements OnInit {
       }),
     ];
 
-    // This request is a hard-coded request that will be replaced by data from the search
+    let classValueArray: ClassValue[] = [];
+    let cameraTrap: null | string = null;
+    let minDate: null | number = null;
+    let maxDate: null | number = null;
+
+    if (history.state.searchParameters.searchByAnimal) {
+      classValueArray = [
+        new ClassValue(
+          history.state.searchParameters.animalType,
+          history.state.searchParameters.confidenceLevel
+        ),
+      ];
+    }
+
+    if (history.state.searchParameters.searchByCamera) {
+      cameraTrap = history.state.searchParameters.cameraTrap;
+    }
+
+    if (history.state.searchParameters.searchByDate) {
+      if (history.state.searchParameters.dateType == 'between') {
+        minDate = history.state.searchParameters.firstDate;
+        maxDate = history.state.searchParameters.secondDate;
+      } else if (history.state.searchParameters.dateType == 'before') {
+        maxDate = history.state.searchParameters.firstDate;
+      } else if (history.state.searchParameters.dateType == 'after') {
+        minDate = history.state.searchParameters.firstDate;
+      }
+    }
+
     // TODO: this request should also add authentication
-    const imageQueryRequest = new ImageQueryRequest(
-      'researcherID',
-      'token',
-      'projectID'
+    const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
+      dummyData.researcherID,
+      dummyData.authToken,
+      dummyData.projectID,
+      minDate,
+      maxDate,
+      null,
+      cameraTrap,
+      classValueArray
     );
 
     this.server
       .getImagesWithData(imageQueryRequest)
       .pipe(catchError(this.server.handleError('getImagesWithData')))
       .subscribe((response: ImageQueryResponse) => {
-        console.log(response);
-        if (response.success) {
+        if (response.success && response.images.length) {
           this.items = response.images.map(
             (image) =>
               new CustomItem({
@@ -102,6 +119,19 @@ export class ImageThumbnailsPageComponent implements OnInit {
                 ],
               })
           );
+        } else if (response.success) {
+          // no images matched the criteria so we keep it empty
+          alert('No images matched your search criteria. Please try again');
+          this.items = [
+            new CustomItem({
+              src: '',
+              thumb: '',
+              animalLabels: [],
+              animalPercentages: [],
+              metadataLabels: [],
+              metadataValues: [],
+            }),
+          ];
         } else {
           console.log('ERROR with image data request:', response.errorMsg);
         }

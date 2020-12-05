@@ -5,7 +5,7 @@ const DRAWABLE_CANVAS: boolean = false;
 @Component({
   selector: 'app-image-details',
   templateUrl: './image-details.component.html',
-  styleUrls: ['./image-details.component.css']
+  styleUrls: ['./image-details.component.css'],
 })
 export class ImageDetailsComponent implements OnInit {
   @Input() src: string;
@@ -22,8 +22,8 @@ export class ImageDetailsComponent implements OnInit {
       y: 200,
       width: 100,
       height: 50,
-    }
-  ]
+    },
+  ];
 
   public boxes: BoundingBox[];
 
@@ -36,20 +36,11 @@ export class ImageDetailsComponent implements OnInit {
   imgWidth: number;
   imgHeight: number;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
-    console.log(this.src);
-    console.log("image details has been called");
-
     this.boxes = this.boundingBoxes.map(
-      (box) =>
-        new BoundingBox(
-          box.x,
-          box.y,
-          box.width,
-          box.height,
-        )
+      (box) => new BoundingBox(box.x, box.y, box.width, box.height)
     );
   }
 
@@ -70,7 +61,13 @@ export class ImageDetailsComponent implements OnInit {
 
   private draw(index: number = -1) {
     this.ctx.clearRect(0, 0, this.canvasEl.width, this.canvasEl.height);
-    this.ctx.drawImage(this.image, 0, 0, this.canvasEl.width, this.canvasEl.height);
+    this.ctx.drawImage(
+      this.image,
+      0,
+      0,
+      this.canvasEl.width,
+      this.canvasEl.height
+    );
     if (DRAWABLE_CANVAS) {
       this.drawBoundingBoxes(index);
     }
@@ -79,12 +76,16 @@ export class ImageDetailsComponent implements OnInit {
   private drawBoundingBoxes(index: number = -1) {
     for (let i = 0; i < this.boxes.length; ++i) {
       this.ctx.beginPath();
-      this.ctx.rect(this.boxes[i].x, this.boxes[i].y, this.boxes[i].width, this.boxes[i].height);
+      this.ctx.rect(
+        this.boxes[i].x,
+        this.boxes[i].y,
+        this.boxes[i].width,
+        this.boxes[i].height
+      );
       this.ctx.lineWidth = this.normalizeLineWidth();
       if (i == index) {
         this.ctx.strokeStyle = '#00AEEF';
-      }
-      else {
+      } else {
         this.ctx.strokeStyle = 'black';
       }
       this.ctx.stroke();
@@ -92,10 +93,12 @@ export class ImageDetailsComponent implements OnInit {
   }
 
   private mouse = {
-    x: 0, y: 0,
-    lastX: 0, lastY: 0,
+    x: 0,
+    y: 0,
+    lastX: 0,
+    lastY: 0,
     mousedown: false,
-  }
+  };
 
   private normalizeLineWidth(): number {
     var lineWidth = 5;
@@ -103,7 +106,8 @@ export class ImageDetailsComponent implements OnInit {
     var bounds = this.canvasEl.getBoundingClientRect();
 
     var boundsVal = bounds.width < bounds.height ? bounds.height : bounds.width;
-    var canvasVal = bounds.width < bounds.height ? this.canvasEl.height : this.canvasEl.width;
+    var canvasVal =
+      bounds.width < bounds.height ? this.canvasEl.height : this.canvasEl.width;
 
     lineWidth /= boundsVal;
     lineWidth *= canvasVal;
@@ -162,7 +166,12 @@ export class ImageDetailsComponent implements OnInit {
       let y = this.boxes[i].y;
       let width = this.boxes[i].width;
       let height = this.boxes[i].height;
-      if (x <= this.mouse.x && this.mouse.x <= x + width && y <= this.mouse.y && this.mouse.y <= y + height) {
+      if (
+        x <= this.mouse.x &&
+        this.mouse.x <= x + width &&
+        y <= this.mouse.y &&
+        this.mouse.y <= y + height
+      ) {
         selectedBox = true;
         this.draw(i);
       }
