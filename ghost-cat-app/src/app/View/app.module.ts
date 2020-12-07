@@ -2,7 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
@@ -43,7 +49,13 @@ import { ExpandableListModule } from 'angular-expandable-list';
     CommonModule,
     AppRoutingModule,
     MatButtonModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatDividerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
     NoopAnimationsModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -59,6 +71,7 @@ import { ExpandableListModule } from 'angular-expandable-list';
         imageSize: 'cover',
       },
     },
+    MatDatepickerModule,
   ],
   bootstrap: [AppComponent],
   entryComponents: [],

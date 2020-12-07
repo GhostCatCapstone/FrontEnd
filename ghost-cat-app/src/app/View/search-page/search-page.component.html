@@ -8,34 +8,71 @@
     <h3>Standard Filters</h3>
   </div>
   <div>
-    <input type="checkbox" id="Animal" /> Search by Animal
-    <select name="animals" id="AnimalValue">
-      <option value="Mule Deer">Mule Deer</option>
-      <option value="Cow">Cow</option>
-      <option value="Sheep">Sheep</option>
-      <option value="Other">Other</option>
-    </select>
-    Confidence Level (percent)<input type="number" id="ConfidenceLevel" />
+    <mat-checkbox id="Animal" [(ngModel)]="searchByAnimal"
+      >Search by Animal</mat-checkbox
+    >
+    <mat-form-field *ngIf="searchByAnimal" class="marginLeft">
+      <mat-label>Select a Class</mat-label>
+      <mat-select [(value)]="classChoice" [required]="true">
+        <mat-option *ngFor="let class of classes" [value]="class">
+          {{ class }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="searchByAnimal && classChoice" class="marginLeft">
+      <mat-label>Confidence Level (percent)</mat-label>
+      <input matInput type="number" id="ConfidenceLevel" [required]="true" />
+    </mat-form-field>
   </div>
   <div>
-    <input type="checkbox" id="Camera" /> Search by Camera
-    <select name="cameras" id="CameraTrap">
-      <option value="site002">site002</option>
-      <option value="site004">site004</option>
-      <option value="site005">site005</option>
-      <option value="site006">site006</option>
-      <option value="site008">site008</option>
-    </select>
+    <mat-checkbox id="Camera" [(ngModel)]="searchByCamera"
+      >Search by Camera</mat-checkbox
+    >
+    <mat-form-field *ngIf="searchByCamera" class="marginLeft">
+      <mat-label>Camera Trap</mat-label>
+      <mat-select [(value)]="cameraTrap" [required]="true">
+        <mat-option *ngFor="let trap of cameraTraps" [value]="trap">
+          {{ trap }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <div>
-    <input type="checkbox" id="Date" /> Search by Date
-    <input type="date" id="FirstDate" />
-    <select name="between" id="DateType">
-      <option value="between">between</option>
-      <option value="after">after</option>
-      <option value="before">before</option>
-    </select>
-    <input type="date" id="SecondDate" />
+    <mat-checkbox id="Date" [(ngModel)]="searchByDate"
+      >Search by Date</mat-checkbox
+    >
+    <mat-form-field *ngIf="searchByDate" class="marginLeft">
+      <mat-label>Enter Date Criteria</mat-label>
+      <mat-select
+        [(value)]="dateType"
+        [disabled]="!searchByDate"
+        [required]="searchByDate"
+      >
+        <mat-option value="between">between</mat-option>
+        <mat-option value="after">after</mat-option>
+        <mat-option value="before">before</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="searchByDate" class="marginLeft">
+      <mat-label>Choose a date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        (dateChange)="firstDate = $event.value"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field *ngIf="dateType == 'between'" class="marginLeft">
+      <mat-label>Choose a date</mat-label>
+      <input
+        matInput
+        [matDatepicker]="picker"
+        (dateChange)="secondDate = $event.value"
+      />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
   </div>
   <div>
     <button (click)="enterSearch()">Search</button>
