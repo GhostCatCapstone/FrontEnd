@@ -45,20 +45,20 @@ app-sidebar {
 
     
 .fa-search{ 
-    color:white;
+    color:#00AEEF;
 }
 
 .fa-cog{ 
-    color:white;
+    color:#00AEEF;
 }
 
 .fa-door-open{ 
-    color:white;
+    color:#00AEEF;
 }
 
 .topnav {
     overflow: hidden;
-    background-color: #00AEEF;
+    background-color: white;
   }
 
   .topnav .fa-search { 

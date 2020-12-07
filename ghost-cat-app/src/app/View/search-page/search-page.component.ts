@@ -20,6 +20,9 @@ export class SearchPageComponent implements OnInit {
   }
 
   enterSearch(): void {
+    const animal: HTMLInputElement = <HTMLInputElement>(
+      document.getElementById('Animal')
+    );
     const animalType: string = (<HTMLInputElement>(
       document.getElementById('AnimalValue')
     )).value;
@@ -28,10 +31,16 @@ export class SearchPageComponent implements OnInit {
         (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
       ) / 100;
 
+    const camera: HTMLInputElement = <HTMLInputElement>(
+      document.getElementById('Camera')
+    );
     const cameraTrap: string = (<HTMLInputElement>(
       document.getElementById('CameraTrap')
     )).value;
 
+    const date: HTMLInputElement = <HTMLInputElement>(
+      document.getElementById('Date')
+    );
     const firstDate: Date = new Date(
       (<HTMLInputElement>document.getElementById('FirstDate')).value
     );
@@ -47,12 +56,12 @@ export class SearchPageComponent implements OnInit {
     this.router.navigate(['thumbnails'], {
       state: {
         searchParameters: {
-          searchByAnimal: this.searchByAnimal,
+          searchByAnimal: animal.checked,
           animalType: animalType,
           confidenceLevel: confidenceLevel,
-          searchByCamera: this.searchByCamera,
+          searchByCamera: camera.checked,
           cameraTrap: cameraTrap,
-          searchByDate: this.searchByDate,
+          searchByDate: date.checked,
           dateType: dateType,
           firstDate: firstDate.getTime(),
           secondDate: secondDate?.getTime(),
