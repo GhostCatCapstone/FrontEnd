@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
-
-const DRAWABLE_CANVAS: boolean = false;
+import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-image-details',
@@ -9,23 +9,9 @@ const DRAWABLE_CANVAS: boolean = false;
 })
 export class ImageDetailsComponent implements OnInit {
   @Input() src: string;
-
-  public boundingBoxes = [
-    {
-      x: 50,
-      y: 50,
-      width: 50,
-      height: 100,
-    },
-    {
-      x: 300,
-      y: 200,
-      width: 100,
-      height: 50,
-    },
-  ];
-
-  public boxes: BoundingBox[];
+  @Input() boxes: BoundingBoxModel[];
+  @Output() selectBoundingBoxEvent = new EventEmitter<BoundingBoxModel>();
+  private drawableCanvas: boolean = false;
 
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
@@ -36,12 +22,9 @@ export class ImageDetailsComponent implements OnInit {
   imgWidth: number;
   imgHeight: number;
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
-    this.boxes = this.boundingBoxes.map(
-      (box) => new BoundingBox(box.x, box.y, box.width, box.height)
-    );
   }
 
   public ngAfterViewInit() {
@@ -68,25 +51,19 @@ export class ImageDetailsComponent implements OnInit {
       this.canvasEl.width,
       this.canvasEl.height
     );
-    if (DRAWABLE_CANVAS) {
-      this.drawBoundingBoxes(index);
-    }
+    this.drawBoundingBoxes(index);
   }
 
   private drawBoundingBoxes(index: number = -1) {
     for (let i = 0; i < this.boxes.length; ++i) {
       this.ctx.beginPath();
-      this.ctx.rect(
-        this.boxes[i].x,
-        this.boxes[i].y,
-        this.boxes[i].width,
-        this.boxes[i].height
-      );
+      let { x, y, h, w } = this.normalizeBoundingBox(this.boxes[i].xVal, this.boxes[i].yVal, this.boxes[i].height, this.boxes[i].width);
+      this.ctx.rect(x, y, h, w);
       this.ctx.lineWidth = this.normalizeLineWidth();
       if (i == index) {
         this.ctx.strokeStyle = '#00AEEF';
       } else {
-        this.ctx.strokeStyle = 'black';
+        this.ctx.strokeStyle = this.boxes[i].color;
       }
       this.ctx.stroke();
     }
@@ -131,6 +108,14 @@ export class ImageDetailsComponent implements OnInit {
     this.mouse.y *= this.canvasEl.height;
   }
 
+  private normalizeBoundingBox(xVal: number, yVal: number, height: number, width: number): { x: number, y: number, h: number, w: number } {
+    let x = this.canvasEl.width * xVal;
+    let y = this.canvasEl.height * yVal;
+    let h = this.canvasEl.height * height;
+    let w = this.canvasEl.width * width;
+    return { x, y, h, w };
+  }
+
   public mouseDown(event: any) {
     this.normalizePosition(event);
 
@@ -146,7 +131,7 @@ export class ImageDetailsComponent implements OnInit {
   public mouseMove(event: any) {
     this.normalizePosition(event);
 
-    if (this.mouse.mousedown && DRAWABLE_CANVAS) {
+    if (this.mouse.mousedown && this.drawableCanvas) {
       this.draw();
       this.ctx.beginPath();
       var width = this.mouse.x - this.mouse.lastX;
@@ -162,37 +147,22 @@ export class ImageDetailsComponent implements OnInit {
     let selectedBox: boolean = false;
 
     for (let i = 0; i < this.boxes.length; ++i) {
-      let x = this.boxes[i].x;
-      let y = this.boxes[i].y;
-      let width = this.boxes[i].width;
-      let height = this.boxes[i].height;
+      let { x, y, h, w } = this.normalizeBoundingBox(this.boxes[i].xVal, this.boxes[i].yVal, this.boxes[i].height, this.boxes[i].width);
       if (
         x <= this.mouse.x &&
-        this.mouse.x <= x + width &&
+        this.mouse.x <= x + w &&
         y <= this.mouse.y &&
-        this.mouse.y <= y + height
+        this.mouse.y <= y + h
       ) {
         selectedBox = true;
+        this.selectBoundingBoxEvent.emit(this.boxes[i]);
         this.draw(i);
       }
     }
 
     if (!selectedBox) {
       this.draw();
+      this.selectBoundingBoxEvent.emit(null);
     }
-  }
-}
-
-export class BoundingBox {
-  readonly x: number;
-  readonly y: number;
-  readonly width: number;
-  readonly height: number;
-
-  public constructor(x: number, y: number, width: number, height: number) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Gallery, GalleryItem } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
@@ -7,6 +7,10 @@ import { ImageQueryRequest } from 'src/app/Model/ImageQueryRequest';
 import { ImageQueryResponse } from 'src/app/Model/ImageQueryResponse';
 import { ClassValue } from 'src/app/Model/ClassValue';
 import { dummyData } from 'src/app/Proxy/DummyData';
+import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
+import { COLORS } from 'src/app/Model/Colors';
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { ImageDetailsComponent } from '../image-details/image-details.component';
 
 @Component({
   selector: 'app-image-thumbnails-page',
@@ -17,12 +21,14 @@ export class ImageThumbnailsPageComponent implements OnInit {
   items: GalleryItem[];
 
   public currIndex: number = 0;
+  public selectedBox: BoundingBoxModel;
 
   constructor(
     public gallery: Gallery,
     private router: Router,
-    private server: ServerFacade
-  ) {}
+    private server: ServerFacade,
+    public cdr: ChangeDetectorRef,
+  ) { }
 
   ngOnInit() {
     this.items = [
@@ -33,6 +39,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         animalPercentages: [],
         metadataLabels: [],
         metadataValues: [],
+        boundingBoxes: [],
       }),
     ];
 
@@ -117,6 +124,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
                   image.deployment,
                   image.night_im,
                 ],
+                boundingBoxes: this.addColorsToBoundingBoxes(image.boundingBoxes),
               })
           );
         } else if (response.success) {
@@ -130,6 +138,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
               animalPercentages: [],
               metadataLabels: [],
               metadataValues: [],
+              boundingBoxes: [],
             }),
           ];
         } else {
@@ -138,12 +147,25 @@ export class ImageThumbnailsPageComponent implements OnInit {
       });
   }
 
+  private addColorsToBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
+    for (let i = 0; i < COLORS.length && i < boxes.length; ++i) {
+      boxes[i].color = COLORS[i];
+    }
+    return boxes;
+  }
+
   public indexChanged(event) {
     this.currIndex = event.currIndex;
   }
 
   goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
+  }
+
+  @ViewChild('sidebar') sidebarComponent: SidebarComponent;
+
+  public selectedBoundingBox(bb: BoundingBoxModel): void {
+    this.sidebarComponent.selectedBoxChanged(bb);
   }
 }
 
