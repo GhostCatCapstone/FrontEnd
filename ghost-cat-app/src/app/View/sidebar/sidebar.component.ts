@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { ExpandableListComponent, ExpandableListModule } from 'angular-expandable-list';
 import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 
-const NUMBER_OF_DECIMALS: number = 5;
+const NUMBER_OF_DECIMALS: number = 3;
 
 @Component({
   selector: 'app-sidebar',
