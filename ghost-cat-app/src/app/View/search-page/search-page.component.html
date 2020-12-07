@@ -8,7 +8,13 @@
     <h3>Standard Filters</h3>
   </div>
   <div>
-    <input type="checkbox" id="Animal" /> Search by Animal
+    <input
+      type="checkbox"
+      id="Animal"
+      [checked]="searchByAnimal"
+      (change)="(searchByAnimal != searchByAnimal)"
+    />
+    Search by Animal
     <select name="animals" id="AnimalValue">
       <option value="Mule Deer">Mule Deer</option>
       <option value="Cow">Cow</option>
@@ -18,7 +24,13 @@
     Confidence Level (percent)<input type="number" id="ConfidenceLevel" />
   </div>
   <div>
-    <input type="checkbox" id="Camera" /> Search by Camera
+    <input
+      type="checkbox"
+      id="Camera"
+      [checked]="searchByCamera"
+      (change)="(searchByCamera != searchByCamera)"
+    />
+    Search by Camera
     <select name="cameras" id="CameraTrap">
       <option value="site002">site002</option>
       <option value="site004">site004</option>
@@ -28,7 +40,13 @@
     </select>
   </div>
   <div>
-    <input type="checkbox" id="Date" /> Search by Date
+    <input
+      type="checkbox"
+      id="Date"
+      [checked]="searchByDate"
+      (change)="(searchByDate != searchByDate)"
+    />
+    Search by Date
     <input type="date" id="FirstDate" />
     <select name="between" id="DateType">
       <option value="between">between</option>

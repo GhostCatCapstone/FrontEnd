@@ -9,12 +9,17 @@ import { Router } from '@angular/router';
 export class SearchPageComponent implements OnInit {
   constructor(private router: Router) {}
 
-  ngOnInit(): void {}
+  private searchByAnimal: boolean;
+  private searchByCamera: boolean;
+  private searchByDate: boolean;
+
+  ngOnInit(): void {
+    this.searchByAnimal = false;
+    this.searchByCamera = false;
+    this.searchByDate = false;
+  }
 
   enterSearch(): void {
-    const animal: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('Animal')
-    );
     const animalType: string = (<HTMLInputElement>(
       document.getElementById('AnimalValue')
     )).value;
@@ -23,16 +28,10 @@ export class SearchPageComponent implements OnInit {
         (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
       ) / 100;
 
-    const camera: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('Camera')
-    );
     const cameraTrap: string = (<HTMLInputElement>(
       document.getElementById('CameraTrap')
     )).value;
 
-    const date: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('Date')
-    );
     const firstDate: Date = new Date(
       (<HTMLInputElement>document.getElementById('FirstDate')).value
     );
@@ -48,12 +47,12 @@ export class SearchPageComponent implements OnInit {
     this.router.navigate(['thumbnails'], {
       state: {
         searchParameters: {
-          searchByAnimal: animal.checked,
+          searchByAnimal: this.searchByAnimal,
           animalType: animalType,
           confidenceLevel: confidenceLevel,
-          searchByCamera: camera.checked,
+          searchByCamera: this.searchByCamera,
           cameraTrap: cameraTrap,
-          searchByDate: date.checked,
+          searchByDate: this.searchByDate,
           dateType: dateType,
           firstDate: firstDate.getTime(),
           secondDate: secondDate?.getTime(),
