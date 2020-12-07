@@ -9,62 +9,44 @@ import { Router } from '@angular/router';
 export class SearchPageComponent implements OnInit {
   constructor(private router: Router) {}
 
-  private searchByAnimal: boolean;
-  private searchByCamera: boolean;
-  private searchByDate: boolean;
+  public searchByAnimal: boolean;
+  public searchByCamera: boolean;
+  public searchByDate: boolean;
+  public classChoice: string;
+  public cameraTrap: string;
+  public dateType: string;
+  public firstDate: Date;
+  public secondDate: Date;
+  public classes: string[];
+  public cameraTraps: string[];
 
   ngOnInit(): void {
     this.searchByAnimal = false;
     this.searchByCamera = false;
     this.searchByDate = false;
+    this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
+    this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
   }
 
   enterSearch(): void {
-    const animal: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('Animal')
-    );
-    const animalType: string = (<HTMLInputElement>(
-      document.getElementById('AnimalValue')
-    )).value;
-    const confidenceLevel: number =
-      parseInt(
-        (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
-      ) / 100;
-
-    const camera: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('Camera')
-    );
-    const cameraTrap: string = (<HTMLInputElement>(
-      document.getElementById('CameraTrap')
-    )).value;
-
-    const date: HTMLInputElement = <HTMLInputElement>(
-      document.getElementById('Date')
-    );
-    const firstDate: Date = new Date(
-      (<HTMLInputElement>document.getElementById('FirstDate')).value
-    );
-
-    const dateType: string = (<HTMLSelectElement>(
-      document.getElementById('DateType')
-    )).value;
-
-    const secondDate: Date | null = new Date(
-      (<HTMLInputElement>document.getElementById('SecondDate')).value
-    );
+    const confidenceLevel: number = this.searchByAnimal
+      ? parseInt(
+          (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
+        ) / 100
+      : 0;
 
     this.router.navigate(['thumbnails'], {
       state: {
         searchParameters: {
-          searchByAnimal: animal.checked,
-          animalType: animalType,
+          searchByAnimal: this.searchByAnimal,
+          animalType: this.classChoice,
           confidenceLevel: confidenceLevel,
-          searchByCamera: camera.checked,
-          cameraTrap: cameraTrap,
-          searchByDate: date.checked,
-          dateType: dateType,
-          firstDate: firstDate.getTime(),
-          secondDate: secondDate?.getTime(),
+          searchByCamera: this.searchByCamera,
+          cameraTrap: this.cameraTrap,
+          searchByDate: this.searchByDate,
+          dateType: this.dateType,
+          firstDate: this.firstDate?.getTime(),
+          secondDate: this.secondDate?.getTime(),
         },
       },
     });

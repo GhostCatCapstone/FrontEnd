@@ -1,22 +1,25 @@
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 75px 50px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 75px 50px;
 }
 
 h1 {
-    font-weight: 200;
+  font-weight: 200;
 }
 
 div {
-    margin: 20px;
+  margin: 20px;
 }
 
-
 button {
-    width: 10%;
-    padding: .5%;
-    background-color: #00AEEF;
-    color: #FFFFFF;
-    border-radius: 5px;
-    border: 1px solid #707070;
+  width: 10%;
+  padding: 0.5%;
+  background-color: #00aeef;
+  color: #ffffff;
+  border-radius: 5px;
+  border: 1px solid #707070;
+}
+
+.marginLeft {
+  margin-left: 20px;
 }
