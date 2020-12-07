@@ -12,6 +12,7 @@ export const imageData = [
     animalPercentages: ['5.02%', '4.89%', '92.86%'],
     metadataLabels: ['Image', 'Camera make', 'Camera model'],
     metadataValues: ['1', 'CUDDEBACK', 'Ambush'],
+    boundingBoxes: [],
   },
   {
     src: 'https://480-wildlife-user-images.s3.amazonaws.com/1081493',
@@ -64,6 +65,7 @@ export const imageData = [
       'CUDDEBACK',
       'Ambush',
     ],
+    boundingBoxes: [],
   },
   {
     src:
@@ -74,6 +76,7 @@ export const imageData = [
     animalPercentages: ['5.02%', '4.89%', '92.86%'],
     metadataLabels: ['Image', 'Camera make', 'Camera model'],
     metadataValues: ['3', 'CUDDEBACK', 'Ambush'],
+    boundingBoxes: [],
   },
   {
     src: 'https://img.pngio.com/tall-png-6-png-image-tall-png-354_864.png',
@@ -82,6 +85,7 @@ export const imageData = [
     animalPercentages: ['5.02%', '4.89%', '92.86%'],
     metadataLabels: ['Image', 'Camera make', 'Camera model'],
     metadataValues: ['4', 'CUDDEBACK', 'Ambush'],
+    boundingBoxes: [],
   },
   {
     src:
@@ -92,6 +96,7 @@ export const imageData = [
     animalPercentages: ['5.02%', '4.89%', '92.86%'],
     metadataLabels: ['Image', 'Camera make', 'Camera model'],
     metadataValues: ['5', 'CUDDEBACK', 'Ambush'],
+    boundingBoxes: [],
   },
   {
     src: 'assets/smallimage.jpg',
@@ -100,6 +105,7 @@ export const imageData = [
     animalPercentages: ['5.02%', '4.89%', '92.86%'],
     metadataLabels: ['Image', 'Camera make', 'Camera model'],
     metadataValues: ['6', 'CUDDEBACK', 'Ambush'],
+    boundingBoxes: [],
   },
   {
     src: 'assets/lowresolution.jpg',
@@ -108,6 +114,7 @@ export const imageData = [
     animalPercentages: ['5.02%', '4.89%', '92.86%'],
     metadataLabels: ['Image', 'Camera make', 'Camera model'],
     metadataValues: ['7', 'CUDDEBACK', 'Ambush'],
+    boundingBoxes: [],
   },
   {
     src: 'assets/GhostCatLogo.png',

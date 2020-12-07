@@ -22,6 +22,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { InternalRegisterPageComponent } from './internal-register-page/internal-register-page.component';
 import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thumbnails-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
+import { ExpandableListModule } from 'angular-expandable-list';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.compon
     BrowserAnimationsModule,
     MaterialModule,
     GalleryModule,
+    ExpandableListModule,
   ],
   providers: [
     {
@@ -61,4 +63,4 @@ import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.compon
   bootstrap: [AppComponent],
   entryComponents: [],
 })
-export class AppModule {}
+export class AppModule { }

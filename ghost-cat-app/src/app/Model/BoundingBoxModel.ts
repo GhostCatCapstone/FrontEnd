@@ -6,6 +6,7 @@ export class BoundingBoxModel {
     public yVal: number,
     public width: number,
     public height: number,
-    public classes: any
-  ) {}
+    public classes: any,
+    public color: string,
+  ) { }
 }
