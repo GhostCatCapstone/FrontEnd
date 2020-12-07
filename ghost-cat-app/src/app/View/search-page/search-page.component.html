@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <head>
     <title></title>
     <base href="/">
@@ -10,15 +11,16 @@
        <h3>Standard Filters</h3>
    </div>
    <div>
-        <input type="checkbox" id="Animal"> Search by Animal 
-        <select name="animals">
+        <input type="checkbox" id="Animal" onclick="animalCheck()"> Search by Animal 
+        <select id="animals" name="animals">
             <option value="mule deer">Mule Deer</option>
             <option value="cow">Cow</option>
             <option value="sheep">Sheep</option>
             <option value="other">Other</option>
         </select>
-        Percent Certain <input type="number">
+        Percent Certain <input id="percents" type="number">
    </div>
+   
    <div>
         <input type="checkbox" id="Camera"> Search by Camera 
         <select name="cameras">

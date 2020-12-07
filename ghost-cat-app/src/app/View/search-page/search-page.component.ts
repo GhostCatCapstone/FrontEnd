@@ -13,6 +13,19 @@ export class SearchPageComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  animalCheck() {
+    var checkBox = document.getElementById("Animal");
+    var animals = document.getElementById("animals");
+    var percents = document.getElementById("percents");
+    if ((<HTMLInputElement>checkBox).checked == true){
+      animals.style.display = "block";
+      percents.style.display = "block";
+    } else {
+      animals.style.display = "none";
+      percents.style.display = "none";
+    }
+  }
+
   goToPage(pageName:string):void{
     this.router.navigate([`${pageName}`]);
   }
