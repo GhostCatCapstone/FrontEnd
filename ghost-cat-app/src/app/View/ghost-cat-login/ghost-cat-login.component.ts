@@ -1,28 +1,32 @@
 import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import * as crypto from 'crypto-js';
 import { ServerFacade } from '../../Proxy/ServerFacade';
 import { LoginRequest } from '../../Model/LoginRequest';
 
 @Component({
   selector: 'app-ghost-cat-login',
   templateUrl: './ghost-cat-login.component.html',
-  styleUrls: ['./ghost-cat-login.component.css']
+  styleUrls: ['./ghost-cat-login.component.css'],
 })
 export class GhostCatLoginComponent implements OnInit {
+  public email: string = '';
+  public password: string = '';
 
-  constructor(private router:Router, private server: ServerFacade) { }
+  constructor(private router: Router, private server: ServerFacade) {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  goToPage(pageName:string):void{
+  goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
   }
 
-  public sendLoginRequest(event: Event): void {
-    var email = (<HTMLInputElement>document.getElementById("EmailUserInput")).value;
-    var password = (<HTMLInputElement>document.getElementById("PasswordUserInput")).value;
-    const loginRequest: LoginRequest = new LoginRequest(email, password);
+  public sendLoginRequest(): void {
+    const passwordHash = crypto.SHA512(this.password).toString();
+    const loginRequest: LoginRequest = new LoginRequest(
+      this.email,
+      passwordHash
+    );
     this.server.login(loginRequest, this.router);
   }
 }

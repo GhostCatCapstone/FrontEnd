@@ -7,14 +7,32 @@
   <div>
     <img class="logo" src="assets/GhostCatLogo.png" alt="Ghost Cat Logo" />
   </div>
-  <div class="inputs">
-    <input id="EmailUserInput" type="text" placeholder="Email" />
+  <div>
+    <mat-form-field class="inputBox">
+      <mat-label>Email</mat-label>
+      <input
+        matInput
+        type="email"
+        placeholder="Enter email address"
+        [(ngModel)]="email"
+        [required]="true"
+      />
+    </mat-form-field>
   </div>
-  <div class="inputs">
-    <input id="PasswordUserInput" type="password" placeholder="Password" />
+  <div>
+    <mat-form-field class="inputBox">
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        type="password"
+        placeholder="Enter password"
+        [(ngModel)]="password"
+        [required]="true"
+      />
+    </mat-form-field>
   </div>
   <div class="buttons">
-    <button (click)="sendLoginRequest($event)">Login</button>
+    <button (click)="sendLoginRequest()">Login</button>
     <button (click)="goToPage('forgotpassword')">Forgot Password</button>
   </div>
   <p>
