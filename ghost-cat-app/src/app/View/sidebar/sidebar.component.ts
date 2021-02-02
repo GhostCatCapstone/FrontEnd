@@ -10,13 +10,20 @@ const NUMBER_OF_DECIMALS: number = 3;
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
+  @Input() src: string;
   @Input() animalLabels: string[];
   @Input() animalPercentages: string[];
   @Input() metadataLabels: string[];
   @Input() metadataValues: string[];
   @Input() boundingBoxes: BoundingBoxModel[];
+  @Output() deleteBoxesEvent = new EventEmitter<BoundingBoxModel[]>();
+  @Output() addNewBoxEvent = new EventEmitter<string>();
+  @Output() cancelNewBoxEvent = new EventEmitter<null>();
+
   private selectedBox: BoundingBoxModel;
   private expandedMap: Map<BoundingBoxModel, boolean> = null;
+  public addingNewBox: string = null;
+  private drewShape: boolean = false;
 
   constructor() { }
 
@@ -46,28 +53,24 @@ export class SidebarComponent implements OnInit {
     return valueArr.map((n: number) => (n * 100).toFixed(NUMBER_OF_DECIMALS) + "%");
   }
 
-  private checkIfEqual(bb1: BoundingBoxModel, bb2: BoundingBoxModel): boolean {
+  private isEqual(bb1: BoundingBoxModel, bb2: BoundingBoxModel) {
     if (bb1 == null && bb2 == null) {
       return true;
-    }
-    if (bb1 == null || bb2 == null) {
+    } else if (bb1 == null || bb2 == null) {
       return false;
     }
-    if (bb1.id == bb2.id && bb1.imgId == bb2.imgId && bb1.xVal == bb2.xVal && bb1.yVal == bb2.yVal && bb1.height == bb2.height && bb1.width == bb2.width && bb1.classes == bb2.classes && bb1.color == bb2.color) {
-      return true;
-    }
-    return false;
+    return bb1.id == bb2.id;
   }
 
   public selectedBoxChanged(bb: BoundingBoxModel) {
-    if (bb == null || bb != this.selectedBox) {
+    if (bb == null || !this.isEqual(bb, this.selectedBox)) {
       this.expandedMap.clear();
     }
     this.selectedBox = bb;
   }
 
   public isSelected(bb: BoundingBoxModel): boolean {
-    if (this.checkIfEqual(bb, this.selectedBox) || (!!this.expandedMap.get(bb) && this.expandedMap.get(bb).valueOf())) {
+    if (this.isEqual(bb, this.selectedBox) || (!!this.expandedMap.get(bb) && this.expandedMap.get(bb).valueOf())) {
       return true;
     }
     return false;
@@ -75,5 +78,49 @@ export class SidebarComponent implements OnInit {
 
   public expanded(event, bb: BoundingBoxModel) {
     this.expandedMap.set(bb, event);
+  }
+
+  // TODO
+  public confirmAllBoxes() {
+
+  }
+
+  public deleteAllBoxes() {
+    this.deleteBoxesEvent.emit(this.boundingBoxes);
+  }
+
+  public addNewBoundingBox() {
+    this.addNewBoxEvent.emit(this.src);
+  }
+
+  public addingNewBoxId(id: string) {
+    this.addingNewBox = id;
+  }
+
+  public selectClass(index: number) {
+    if (this.drewShape) {
+      this.addingNewBox = null;
+      this.addNewBoxEvent.emit(null);
+      this.drewShape = false;
+    } else {
+      alert("Draw a bounding box before selecting a classification.");
+    }
+  }
+
+  public shapeDrawn(b: boolean) {
+    this.drewShape = b;
+  }
+
+  public cancelNewBox() {
+    this.cancelNewBoxEvent.emit();
+  }
+
+  // TODO
+  public confirmBox(bb: BoundingBoxModel) {
+
+  }
+
+  public deleteBox(bb: BoundingBoxModel) {
+    this.deleteBoxesEvent.emit([bb]);
   }
 }

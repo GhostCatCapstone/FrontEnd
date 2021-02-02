@@ -4,13 +4,13 @@
     <div class="animal-header">
         <h4 class="animal-header-title">Animals</h4>
         <div>
-            <span title="Confirm All">
+            <span title="Confirm All" (click)="confirmAllBoxes()">
                 <i class="fas fa-check-circle" alt="Confirm All"></i>
             </span>
-            <span title="Delete All">
+            <span title="Delete All" (click)="deleteAllBoxes()">
                 <i class="fas fa-times-circle" alt="Delete All"></i>
             </span>
-            <span title="Add New">
+            <span title="Add New" (click)="addNewBoundingBox()">
                 <i class="fas fa-plus-circle" alt="Add New"></i>
             </span>
         </div>
@@ -25,24 +25,38 @@
                     <a>{{getItemTitle(bb)}}</a>
                 </div>
                 <div>
-                    <span title="Confirm">
+                    <span title="Confirm" (click)="confirmBox(bb)">
                         <i class="fas fa-check" alt="Confirm"></i>
                     </span>
-                    <span title="Delete">
+                    <span title="Delete" (click)="deleteBox(bb)">
                         <i class="fas fa-times" alt="Delete"></i>
                     </span>
                 </div>
             </span>
+
+            <span item>
+                <div class="prompt" *ngIf="bb.id == addingNewBox">
+                    <p>Draw a bounding box on the image. Then select the classification. </p>
+                    <button class="cancel-button" (click)="cancelNewBox()">Cancel</button>
+                </div>
+            </span>
+
             <span item *ngFor="let animal of getAnimalLabels(bb); let i = index">
                 <div class="list-item">
-                    <form class="form">
+                    <form class="form" *ngIf="bb.id != addingNewBox">
                         <mat-form-field class="form-field">
                             <mat-label>{{animal}}</mat-label>
                             <input matInput value="{{getAnimalValues(bb)[i]}}" readonly>
                         </mat-form-field>
                     </form>
+
+                    <div class="new-box" *ngIf="bb.id == addingNewBox">
+                        <a>{{animal}}</a>
+                        <button class="button" (click)="selectClass(i)">Select</button>
+                    </div>
                 </div>
             </span>
+
         </expandable-list-item>
     </expandable-list>
 
