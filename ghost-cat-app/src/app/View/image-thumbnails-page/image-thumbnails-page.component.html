@@ -12,29 +12,30 @@
 
     <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
 
-      <!-- Image Details Component goes here -->
-      <app-image-details #image [src]="data.src" [boxes]="data.boundingBoxes"
-        (selectBoundingBoxEvent)="selectedBoundingBox($event)">
+      <app-image-details #image [src]="data.src" [boundingBoxes]="data.boundingBoxes"
+        (selectBoundingBoxEvent)="selectedBoundingBox($event)" (drawnShapeEvent)="drewShape($event)">
       </app-image-details>
     </ng-template>
 
-    <app-sidebar #sidebar [animalLabels]="items[currIndex].data.animalLabels"
+    <app-sidebar #sidebar [src]="items[currIndex].data.src" [animalLabels]="items[currIndex].data.animalLabels"
       [animalPercentages]="items[currIndex].data.animalPercentages"
       [metadataLabels]="items[currIndex].data.metadataLabels" [metadataValues]="items[currIndex].data.metadataValues"
-      [boundingBoxes]="items[currIndex].data.boundingBoxes">
+      [boundingBoxes]="items[currIndex].data.boundingBoxes" (deleteBoxesEvent)="deletedBoundingBoxes($event)"
+      (addNewBoxEvent)="addNewBox($event)" (cancelNewBoxEvent)="cancelAddingBox()">
     </app-sidebar>
 
     <div class="topnav">
-      <span title="New Search" (click)="goToPage('search')">
-        <i class="fas fa-search fa-md" alt="New Search">
-          <span title="Settings" (click)="goToPage('settings')">
-            <i class="fas fa-cog" alt="Settings">
-              <span title="Logout" (click)="goToPage('login')">
-                <i class="fas fa-door-open" alt="Logout"></i>
-              </span>
-            </i>
-          </span>
+      <span title="New Search" class="icon" (click)="goToPage('search')">
+        <i class="fas fa-search fa-md" alt="New Search"></i>
+      </span>
+
+      <span title="Settings" class="icon" (click)="goToPage('settings')">
+        <i class="fas fa-cog" alt="Settings">
         </i>
+      </span>
+
+      <span title="Logout" class="icon" (click)="goToPage('login')">
+        <i class="fas fa-door-open" alt="Logout"></i>
       </span>
     </div>
   </div>
