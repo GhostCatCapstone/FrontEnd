@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { Gallery, GalleryItem } from 'ng-gallery';
+import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Gallery, GalleryItem, GalleryRef } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { ServerFacade } from '../../Proxy/ServerFacade';
@@ -149,6 +149,19 @@ export class ImageThumbnailsPageComponent implements OnInit {
           console.log('ERROR with image data request:', response.errorMsg);
         }
       });
+  }
+
+  @ViewChild('galleryID') galleryRef: GalleryRef;
+
+  @HostListener('window:keydown', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key == 'ArrowRight') {
+      this.galleryRef.next();
+    }
+
+    if (event.key == 'ArrowLeft') {
+      this.galleryRef.prev();
+    }
   }
 
   private addColorsToBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {

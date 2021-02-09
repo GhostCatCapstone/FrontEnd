@@ -10,25 +10,13 @@
   <div>
     <mat-form-field class="inputBox">
       <mat-label>Email</mat-label>
-      <input
-        matInput
-        type="email"
-        placeholder="Enter email address"
-        [(ngModel)]="email"
-        [required]="true"
-      />
+      <input matInput type="email" placeholder="Enter email address" [(ngModel)]="email" [required]="true" />
     </mat-form-field>
   </div>
   <div>
     <mat-form-field class="inputBox">
       <mat-label>Password</mat-label>
-      <input
-        matInput
-        type="password"
-        placeholder="Enter password"
-        [(ngModel)]="password"
-        [required]="true"
-      />
+      <input matInput type="password" placeholder="Enter password" [(ngModel)]="password" [required]="true" />
     </mat-form-field>
   </div>
   <div class="buttons">
@@ -39,4 +27,6 @@
     <button (click)="goToPage('register')">Register</button>
     <button (click)="goToPage('reset')">Reset Password</button>
   </p>
+
+  <div class="bottom-spacing"></div>
 </body>
