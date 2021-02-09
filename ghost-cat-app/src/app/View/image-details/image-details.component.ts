@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef, Compiler } from '@angular/core';
 import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 import { Output, EventEmitter } from '@angular/core';
 import { Shape } from 'src/app/Model/Shape';
@@ -58,13 +58,15 @@ export class ImageDetailsComponent implements OnInit {
 
     let newBoxes = [];
 
-    for (let i = 0; i < boundingBoxes.length; ++i) {
-      let currBox = boundingBoxes[i];
-      let x = this.canvasEl.width * currBox.xVal;
-      let y = this.canvasEl.height * currBox.yVal;
-      let h = this.canvasEl.height * currBox.height;
-      let w = this.canvasEl.width * currBox.width;
-      newBoxes.push(new BoundingBoxModel(currBox.id, currBox.imgId, x, y, w, h, currBox.classes, currBox.color));
+    if (boundingBoxes != null) {
+      for (let i = 0; i < boundingBoxes.length; ++i) {
+        let currBox = boundingBoxes[i];
+        let x = this.canvasEl.width * currBox.xVal;
+        let y = this.canvasEl.height * currBox.yVal;
+        let h = this.canvasEl.height * currBox.height;
+        let w = this.canvasEl.width * currBox.width;
+        newBoxes.push(new BoundingBoxModel(currBox.id, currBox.imgId, x, y, w, h, currBox.classes, currBox.color));
+      }
     }
 
     return newBoxes;
@@ -83,15 +85,22 @@ export class ImageDetailsComponent implements OnInit {
   }
 
   private drawBoundingBoxes(index: number = -1) {
+    if (this.normalizedBoxes == null) {
+      return;
+    }
+
     for (let i = 0; i < this.normalizedBoxes.length; ++i) {
       this.ctx.beginPath();
       let currBox = this.normalizedBoxes[i];
       this.ctx.rect(currBox.xVal, currBox.yVal, currBox.width, currBox.height);
+      console.log("Drawing box at x: " + currBox.xVal + " y: " + currBox.yVal + " w: " + currBox.width + " h: " + currBox.height);
       this.ctx.lineWidth = this.normalizeLineWidth();
       if (i == index) {
         this.ctx.strokeStyle = '#00AEEF';
+        console.log("Drawing box with color #00AEEF");
       } else {
         this.ctx.strokeStyle = currBox.color;
+        console.log("Drawing box with color " + currBox.color);
       }
       this.ctx.stroke();
     }
@@ -172,6 +181,10 @@ export class ImageDetailsComponent implements OnInit {
     this.drawnShape = null;
     this.drawnShapeEvent.emit(null);
 
+    if (this.normalizedBoxes == null) {
+      return;
+    }
+
     for (let i = 0; i < this.normalizedBoxes.length; ++i) {
       let currBox = this.normalizedBoxes[i];
       if (
@@ -194,6 +207,8 @@ export class ImageDetailsComponent implements OnInit {
 
   public addNewBoundingBox(b: boolean) {
     if (!b) {
+      console.log("Done adding bounding box");
+      console.log("The length of boxes is " + this.boxes.length);
       this.drawnShape = null;
       this.drawnShapeEvent.emit(null);
       this.ngAfterViewInit();

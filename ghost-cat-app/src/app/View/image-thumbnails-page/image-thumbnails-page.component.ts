@@ -24,7 +24,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public currIndex: number = 0;
   public selectedBox: BoundingBoxModel;
-  private colorsUsed: number = 0;
   private newBBLookup = { id: "", src: "" };
 
   constructor(
@@ -167,13 +166,15 @@ export class ImageThumbnailsPageComponent implements OnInit {
   private addColorsToBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
     for (let i = 0; i < COLORS.length && i < boxes.length; ++i) {
       boxes[i].color = COLORS[i];
-      this.colorsUsed = i;
     }
     return boxes;
   }
 
   public indexChanged(event) {
     this.currIndex = event.currIndex;
+    if (this.newBBLookup != null) {
+      this.cancelAddingBox();
+    }
   }
 
   goToPage(pageName: string): void {
@@ -199,7 +200,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         }
       }
 
-      this.items[i].data.boundingBoxes = filteredBoxes;
+      this.items[i].data.boundingBoxes = this.addColorsToBoundingBoxes(filteredBoxes);
     }
   }
 
@@ -217,9 +218,10 @@ export class ImageThumbnailsPageComponent implements OnInit {
       if (item != undefined) {
         let classes = { "Mule Deer": 0, "Cow": 0, "Sheep": 0, "Other": 0 };
 
-        let newBB = { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: COLORS[++this.colorsUsed] };
+        let newBB = { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
         newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
-        item.data.boundingBoxes.unshift(newBB);
+        item.data.boundingBoxes.push(newBB);
+        item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
       }
 
       this.newBBLookup = { id: newBBModel.id, src: src };
@@ -234,7 +236,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
     let boxes = item.data.boundingBoxes.filter(box => box.id != this.newBBLookup.id);
     item.data.boundingBoxes = boxes;
     this.newBBLookup = null;
-    this.colorsUsed--;
     this.imageDetailsComponent.addNewBoundingBox(false);
   }
 

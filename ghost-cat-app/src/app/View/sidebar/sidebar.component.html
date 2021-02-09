@@ -24,7 +24,7 @@
                     <i class="fas fa-circle" [style.color]="getColor(bb)"></i>
                     <a>{{getItemTitle(bb)}}</a>
                 </div>
-                <div>
+                <div *ngIf="bb.id != addingNewBox">
                     <span title="Confirm" (click)="confirmBox(bb)">
                         <i class="fas fa-check" alt="Confirm"></i>
                     </span>
