@@ -6,7 +6,7 @@
 
 <body>
   <div class="thumbnails-page">
-    <gallery class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"
+    <gallery #galleryID class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false" [loop]="false"
       (indexChange)="indexChanged($event)">
     </gallery>
 

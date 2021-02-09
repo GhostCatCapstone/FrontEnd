@@ -22,8 +22,7 @@ export class ImageDetailsComponent implements OnInit {
   public drawnShape: Shape = null;
   @Output() public drawnShapeEvent = new EventEmitter<Shape>();
 
-  @ViewChild('canvas', { static: true })
-  canvas: ElementRef<HTMLCanvasElement>;
+  @ViewChild('canvas', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 
   canvasEl: any;
   ctx: CanvasRenderingContext2D;
