@@ -214,9 +214,21 @@ export class ImageThumbnailsPageComponent implements OnInit {
       var imgId = parts[parts.length - 1];
       let newBBModel: BoundingBoxModel = null;
 
+      let classes = {};
       let item = this.items.find(item => item.data.src == src);
+
       if (item != undefined) {
-        let classes = { "Mule Deer": 0, "Cow": 0, "Sheep": 0, "Other": 0 };
+        let bbs = item.data.boundingBoxes;
+        if (bbs.length > 0) {
+          let classNames = [];
+          for (let varName in bbs[0].classes) {
+            classNames.push(varName);
+          }
+
+          classNames.forEach(function (c) {
+            classes[c] = 0;
+          });
+        }
 
         let newBB = { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
         newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
