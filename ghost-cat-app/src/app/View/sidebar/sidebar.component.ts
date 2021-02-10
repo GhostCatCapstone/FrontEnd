@@ -16,13 +16,13 @@ export class SidebarComponent implements OnInit {
   @Input() metadataLabels: string[];
   @Input() metadataValues: string[];
   @Input() boundingBoxes: BoundingBoxModel[];
+  @Input() newBoxId: string = "";
   @Output() deleteBoxesEvent = new EventEmitter<BoundingBoxModel[]>();
   @Output() addNewBoxEvent = new EventEmitter<string>();
   @Output() cancelNewBoxEvent = new EventEmitter<null>();
 
   private selectedBox: BoundingBoxModel;
   private expandedMap: Map<BoundingBoxModel, boolean> = null;
-  public addingNewBox: string = null;
   private drewShape: boolean = false;
 
   constructor() { }
@@ -93,13 +93,8 @@ export class SidebarComponent implements OnInit {
     this.addNewBoxEvent.emit(this.src);
   }
 
-  public addingNewBoxId(id: string) {
-    this.addingNewBox = id;
-  }
-
   public selectClass(index: number) {
     if (this.drewShape) {
-      this.addingNewBox = null;
       this.addNewBoxEvent.emit(null);
       this.drewShape = false;
     } else {

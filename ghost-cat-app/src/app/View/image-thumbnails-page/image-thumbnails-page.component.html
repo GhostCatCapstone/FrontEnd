@@ -20,8 +20,9 @@
     <app-sidebar #sidebar [src]="items[currIndex].data.src" [animalLabels]="items[currIndex].data.animalLabels"
       [animalPercentages]="items[currIndex].data.animalPercentages"
       [metadataLabels]="items[currIndex].data.metadataLabels" [metadataValues]="items[currIndex].data.metadataValues"
-      [boundingBoxes]="items[currIndex].data.boundingBoxes" (deleteBoxesEvent)="deletedBoundingBoxes($event)"
-      (addNewBoxEvent)="addNewBox($event)" (cancelNewBoxEvent)="cancelAddingBox()">
+      [boundingBoxes]="items[currIndex].data.boundingBoxes" [newBoxId]="newBBLookup.id"
+      (deleteBoxesEvent)="deletedBoundingBoxes($event)" (addNewBoxEvent)="addNewBox($event)"
+      (cancelNewBoxEvent)="cancelAddingBox()">
     </app-sidebar>
 
     <div class="topnav">

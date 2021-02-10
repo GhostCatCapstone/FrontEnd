@@ -102,6 +102,7 @@ export class ImageDetailsComponent implements OnInit {
         this.ctx.strokeStyle = currBox.color;
         console.log("Drawing box with color " + currBox.color);
       }
+      console.log("DrawBoundingBoxes is drawing on canvas");
       this.ctx.stroke();
     }
   }
@@ -171,6 +172,7 @@ export class ImageDetailsComponent implements OnInit {
       this.ctx.rect(this.mouse.lastX, this.mouse.lastY, width, height);
       this.ctx.strokeStyle = '#00AEEF';
       this.ctx.lineWidth = this.normalizeLineWidth();
+      console.log("Mousemove is drawing on canvas");
       this.ctx.stroke();
       this.drawnShape = { x: this.mouse.lastX / this.canvasEl.width, y: this.mouse.lastY / this.canvasEl.height, w: width / this.canvasEl.width, h: height / this.canvasEl.height };
     }
@@ -179,7 +181,7 @@ export class ImageDetailsComponent implements OnInit {
   public dblClick(event: any) {
     let selectedBox: boolean = false;
     this.drawnShape = null;
-    this.drawnShapeEvent.emit(null);
+    this.drawnShapeEvent.emit(this.drawnShape);
 
     if (this.normalizedBoxes == null) {
       return;
@@ -206,13 +208,14 @@ export class ImageDetailsComponent implements OnInit {
   }
 
   public addNewBoundingBox(b: boolean) {
+    drawableCanvas = b;
+
     if (!b) {
       console.log("Done adding bounding box");
       console.log("The length of boxes is " + this.boxes.length);
       this.drawnShape = null;
-      this.drawnShapeEvent.emit(null);
+      this.drawnShapeEvent.emit(this.drawnShape);
       this.ngAfterViewInit();
     }
-    drawableCanvas = b;
   }
 }

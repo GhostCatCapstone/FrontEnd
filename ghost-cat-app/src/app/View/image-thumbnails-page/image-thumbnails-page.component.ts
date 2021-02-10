@@ -172,7 +172,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public indexChanged(event) {
     this.currIndex = event.currIndex;
-    if (this.newBBLookup != null) {
+    if (this.newBBLookup.id != "") {
       this.cancelAddingBox();
     }
   }
@@ -205,49 +205,51 @@ export class ImageThumbnailsPageComponent implements OnInit {
   }
 
   public addNewBox(src: string) {
-    if (src == null) {
-      this.imageDetailsComponent.addNewBoundingBox(false);
-      this.newBBLookup = null;
-    } else {
-      let myId = uuid.v4();
-      var parts = src.split("/");
-      var imgId = parts[parts.length - 1];
-      let newBBModel: BoundingBoxModel = null;
-
-      let classes = {};
+    if (src != null) {
       let item = this.items.find(item => item.data.src == src);
 
       if (item != undefined) {
-        let bbs = item.data.boundingBoxes;
-        if (bbs.length > 0) {
-          let classNames = [];
-          for (let varName in bbs[0].classes) {
-            classNames.push(varName);
-          }
+        let newBB = this.createBBObject(src, item);
+        let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
 
-          classNames.forEach(function (c) {
-            classes[c] = 0;
-          });
-        }
-
-        let newBB = { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
-        newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
         item.data.boundingBoxes.push(newBB);
         item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
+
+        this.newBBLookup = { id: newBBModel.id, src: src };
+        this.sidebarComponent.selectedBoxChanged(newBBModel);
+        this.imageDetailsComponent.addNewBoundingBox(true);
+      }
+    } else {
+      this.imageDetailsComponent.addNewBoundingBox(false);
+      this.newBBLookup = { id: "", src: "" };
+    }
+  }
+
+  private createBBObject(src: string, item: any): any {
+    let myId = uuid.v4();
+    var parts = src.split("/");
+    var imgId = parts[parts.length - 1];
+
+    let classes = {};
+    let bbs = item.data.boundingBoxes;
+    if (bbs.length > 0) {
+      let classNames = [];
+      for (let varName in bbs[0].classes) {
+        classNames.push(varName);
       }
 
-      this.newBBLookup = { id: newBBModel.id, src: src };
-      this.sidebarComponent.selectedBoxChanged(newBBModel);
-      this.sidebarComponent.addingNewBoxId(newBBModel.id);
-      this.imageDetailsComponent.addNewBoundingBox(true);
+      classNames.forEach(function (c) {
+        classes[c] = 0;
+      });
     }
+    return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
   }
 
   public cancelAddingBox() {
     let item = this.items.find(item => item.data.src == this.newBBLookup.src);
     let boxes = item.data.boundingBoxes.filter(box => box.id != this.newBBLookup.id);
     item.data.boundingBoxes = boxes;
-    this.newBBLookup = null;
+    this.newBBLookup = { id: "", src: "" };
     this.imageDetailsComponent.addNewBoundingBox(false);
   }
 
