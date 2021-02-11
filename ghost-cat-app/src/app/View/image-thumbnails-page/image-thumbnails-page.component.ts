@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Gallery, GalleryItem, GalleryRef } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
@@ -35,6 +35,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     private router: Router,
     private server: ServerFacade,
     public cdr: ChangeDetectorRef,
+    public appRef: ApplicationRef,
   ) { }
 
   ngOnInit() {
@@ -217,6 +218,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
       item.data.boundingBoxes.push(newBB);
       item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
+      this.appRef.tick();
 
       this.newBBLookup = { id: newBBModel.id, src: src };
       this.sidebarComponent.selectedBoxChanged(newBBModel);
@@ -247,6 +249,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     this.sidebarComponent.selectedBoxChanged(null);
     this.imageDetailsComponent.addNewBoundingBox(false);
+    this.appRef.tick();
     this.newBBLookup = { id: "", src: "" };
   }
 
