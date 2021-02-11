@@ -10,7 +10,7 @@
       (indexChange)="indexChanged($event)">
     </gallery>
 
-    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data">
 
       <app-image-details #image [src]="data.src" [boundingBoxes]="data.boundingBoxes"
         (selectBoundingBoxEvent)="selectedBoundingBox($event)" (drawnShapeEvent)="drewShape($event)">

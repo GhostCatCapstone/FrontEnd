@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef, Compiler } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef, Compiler, SimpleChanges } from '@angular/core';
 import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 import { Output, EventEmitter } from '@angular/core';
 import { Shape } from 'src/app/Model/Shape';
@@ -93,16 +93,12 @@ export class ImageDetailsComponent implements OnInit {
       this.ctx.beginPath();
       let currBox = this.normalizedBoxes[i];
       this.ctx.rect(currBox.xVal, currBox.yVal, currBox.width, currBox.height);
-      console.log("Drawing box at x: " + currBox.xVal + " y: " + currBox.yVal + " w: " + currBox.width + " h: " + currBox.height);
       this.ctx.lineWidth = this.normalizeLineWidth();
       if (i == index) {
         this.ctx.strokeStyle = '#00AEEF';
-        console.log("Drawing box with color #00AEEF");
       } else {
         this.ctx.strokeStyle = currBox.color;
-        console.log("Drawing box with color " + currBox.color);
       }
-      console.log("DrawBoundingBoxes is drawing on canvas");
       this.ctx.stroke();
     }
   }
@@ -172,7 +168,6 @@ export class ImageDetailsComponent implements OnInit {
       this.ctx.rect(this.mouse.lastX, this.mouse.lastY, width, height);
       this.ctx.strokeStyle = '#00AEEF';
       this.ctx.lineWidth = this.normalizeLineWidth();
-      console.log("Mousemove is drawing on canvas");
       this.ctx.stroke();
       this.drawnShape = { x: this.mouse.lastX / this.canvasEl.width, y: this.mouse.lastY / this.canvasEl.height, w: width / this.canvasEl.width, h: height / this.canvasEl.height };
     }
@@ -211,8 +206,6 @@ export class ImageDetailsComponent implements OnInit {
     drawableCanvas = b;
 
     if (!b) {
-      console.log("Done adding bounding box");
-      console.log("The length of boxes is " + this.boxes.length);
       this.drawnShape = null;
       this.drawnShapeEvent.emit(this.drawnShape);
       this.ngAfterViewInit();

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Gallery, GalleryItem, GalleryRef } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
@@ -24,7 +24,11 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public currIndex: number = 0;
   public selectedBox: BoundingBoxModel;
-  private newBBLookup = { id: "", src: "" };
+  public newBBLookup = { id: "", src: "" };
+
+  private get imageDetailsComponent() {
+    return this.imageDetailsComponentList.find(component => component.src == this.items[this.currIndex]["data"]["src"]);
+  }
 
   constructor(
     public gallery: Gallery,
@@ -187,7 +191,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     this.sidebarComponent.selectedBoxChanged(bb);
   }
 
-  @ViewChild('image') imageDetailsComponent: ImageDetailsComponent;
+  @ViewChildren('image') imageDetailsComponentList: QueryList<ImageDetailsComponent>;
 
   public deletedBoundingBoxes(bb: BoundingBoxModel[]) {
     for (let i = 0; i < this.items.length; ++i) {

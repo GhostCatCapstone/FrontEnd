@@ -46,7 +46,7 @@
                     <form class="form" *ngIf="bb.id != newBoxId">
                         <mat-form-field class="form-field">
                             <mat-label>{{animal}}</mat-label>
-                            <input matInput value="{{getAnimalValues(bb)[i]}}" readonly>
+                            <input matInput value="{{getAnimalValues(bb)[i]}}">
                         </mat-form-field>
                     </form>
 
@@ -62,11 +62,9 @@
 
     <div class="info">
         <h4>Metadata</h4>
-        <form class="form">
-            <mat-form-field class="form-field" *ngFor="let metadata of metadataValues; let i = index">
-                <mat-label>{{metadataLabels[i]}}</mat-label>
-                <input matInput value="{{metadata}}" readonly>
-            </mat-form-field>
-        </form>
+        <mat-form-field class="form-field" *ngFor="let metadata of metadataValues; let i = index">
+            <mat-label>{{metadataLabels[i]}}</mat-label>
+            <input matInput [(ngModel)]="metadataValues[i]">
+        </mat-form-field>
     </div>
 </div>
