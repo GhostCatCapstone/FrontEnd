@@ -20,6 +20,8 @@ export class SidebarComponent implements OnInit {
   @Output() deleteBoxesEvent = new EventEmitter<BoundingBoxModel[]>();
   @Output() addNewBoxEvent = new EventEmitter<string>();
   @Output() cancelNewBoxEvent = new EventEmitter<null>();
+  @Output() selectClassEvent = new EventEmitter<string>();
+  @Output() confirmEvent = new EventEmitter<string>();
 
   private selectedBox: BoundingBoxModel;
   private expandedMap: Map<BoundingBoxModel, boolean> = null;
@@ -80,9 +82,10 @@ export class SidebarComponent implements OnInit {
     this.expandedMap.set(bb, event);
   }
 
-  // TODO
   public confirmAllBoxes() {
-
+    for (let i = 0; i < this.boundingBoxes.length; ++i) {
+      this.confirmEvent.emit(this.boundingBoxes[i].id);
+    }
   }
 
   public deleteAllBoxes() {
@@ -95,7 +98,7 @@ export class SidebarComponent implements OnInit {
 
   public selectClass(index: number) {
     if (this.drewShape) {
-      this.addNewBoxEvent.emit(null);
+      this.selectClassEvent.emit(this.animalLabels[index]);
       this.drewShape = false;
     } else {
       alert("Draw a bounding box before selecting a classification.");
@@ -110,12 +113,19 @@ export class SidebarComponent implements OnInit {
     this.cancelNewBoxEvent.emit();
   }
 
-  // TODO
   public confirmBox(bb: BoundingBoxModel) {
-
+    this.confirmEvent.emit(bb.id);
   }
 
   public deleteBox(bb: BoundingBoxModel) {
     this.deleteBoxesEvent.emit([bb]);
+  }
+
+  public metadataChange(event: any) {
+    console.log("Metadata changed");
+  }
+
+  public trackByFn(index: any, item: any) {
+    return index;
   }
 }

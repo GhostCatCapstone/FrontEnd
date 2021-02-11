@@ -209,23 +209,18 @@ export class ImageThumbnailsPageComponent implements OnInit {
   }
 
   public addNewBox(src: string) {
-    if (src != null) {
-      let item = this.items.find(item => item.data.src == src);
+    let item = this.items.find(item => item.data.src == src);
 
-      if (item != undefined) {
-        let newBB = this.createBBObject(src, item);
-        let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
+    if (item != undefined) {
+      let newBB = this.createBBObject(src, item);
+      let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
 
-        item.data.boundingBoxes.push(newBB);
-        item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
+      item.data.boundingBoxes.push(newBB);
+      item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
 
-        this.newBBLookup = { id: newBBModel.id, src: src };
-        this.sidebarComponent.selectedBoxChanged(newBBModel);
-        this.imageDetailsComponent.addNewBoundingBox(true);
-      }
-    } else {
-      this.imageDetailsComponent.addNewBoundingBox(false);
-      this.newBBLookup = { id: "", src: "" };
+      this.newBBLookup = { id: newBBModel.id, src: src };
+      this.sidebarComponent.selectedBoxChanged(newBBModel);
+      this.imageDetailsComponent.addNewBoundingBox(true);
     }
   }
 
@@ -235,18 +230,46 @@ export class ImageThumbnailsPageComponent implements OnInit {
     var imgId = parts[parts.length - 1];
 
     let classes = {};
-    let bbs = item.data.boundingBoxes;
-    if (bbs.length > 0) {
-      let classNames = [];
-      for (let varName in bbs[0].classes) {
-        classNames.push(varName);
-      }
-
-      classNames.forEach(function (c) {
-        classes[c] = 0;
-      });
+    let classNames = [];
+    for (let index in item.data.animalLabels) {
+      classNames.push(item.data.animalLabels[index]);
     }
+
+    classNames.forEach(function (c) {
+      classes[c] = 0
+    });
+
     return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
+  }
+
+  public selectNewBoxClass(className: string) {
+    this.confirmBox(this.newBBLookup.id, className);
+
+    this.sidebarComponent.selectedBoxChanged(null);
+    this.imageDetailsComponent.addNewBoundingBox(false);
+    this.newBBLookup = { id: "", src: "" };
+  }
+
+  private confirmBox(id: string, className: string = "") {
+    let item = this.items[this.currIndex];
+
+    if (item != undefined) {
+      let bb = item.data.boundingBoxes.find(b => b.id == id);
+
+      if (bb != undefined) {
+        if (className == "") {
+          className = Object.keys(bb.classes).reduce(function (a, b) { return bb.classes[a] > bb.classes[b] ? a : b });
+        }
+
+        for (let c in bb.classes) {
+          if (c == className) {
+            bb.classes[c] = 1;
+          } else {
+            bb.classes[c] = 0;
+          }
+        }
+      }
+    }
   }
 
   public cancelAddingBox() {

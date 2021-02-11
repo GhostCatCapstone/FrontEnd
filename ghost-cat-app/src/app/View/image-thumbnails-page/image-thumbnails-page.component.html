@@ -22,7 +22,8 @@
       [metadataLabels]="items[currIndex].data.metadataLabels" [metadataValues]="items[currIndex].data.metadataValues"
       [boundingBoxes]="items[currIndex].data.boundingBoxes" [newBoxId]="newBBLookup.id"
       (deleteBoxesEvent)="deletedBoundingBoxes($event)" (addNewBoxEvent)="addNewBox($event)"
-      (cancelNewBoxEvent)="cancelAddingBox()">
+      (cancelNewBoxEvent)="cancelAddingBox()" (selectClassEvent)="selectNewBoxClass($event)"
+      (confirmEvent)="confirmBox($event)">
     </app-sidebar>
 
     <div class="topnav">

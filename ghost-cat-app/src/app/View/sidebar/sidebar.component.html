@@ -60,9 +60,9 @@
 
     <div class="info">
         <h4>Metadata</h4>
-        <mat-form-field class="form-field" *ngFor="let metadata of metadataValues; let i = index">
+        <mat-form-field class="form-field" *ngFor="let metadata of metadataValues; let i = index; trackBy:trackByFn">
             <mat-label>{{metadataLabels[i]}}</mat-label>
-            <input matInput [(ngModel)]="metadataValues[i]">
+            <input matInput [(ngModel)]="metadataValues[i]" (ngModelChange)="metadataChange($event)">
         </mat-form-field>
     </div>
 </div>
