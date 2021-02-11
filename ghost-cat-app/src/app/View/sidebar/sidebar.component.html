@@ -42,13 +42,11 @@
             </span>
 
             <span item *ngFor="let animal of getAnimalLabels(bb); let i = index">
-                <div class="list-item" *ngIf="bb.id != newBoxId">
-                    <div *ngIf="bb.id != newBoxId">
-                        <mat-form-field class="form-field">
-                            <mat-label>{{animal}}</mat-label>
-                            <input matInput value="{{getAnimalValues(bb)[i]}}">
-                        </mat-form-field>
-                    </div>
+                <div class="list-item">
+                    <mat-form-field class="form-field" *ngIf="bb.id != newBoxId">
+                        <mat-label>{{animal}}</mat-label>
+                        <input matInput value="{{getAnimalValues(bb)[i]}}">
+                    </mat-form-field>
 
                     <div class="new-box" *ngIf="bb.id == newBoxId">
                         <a>{{animal}}</a>
