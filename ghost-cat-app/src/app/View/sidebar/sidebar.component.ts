@@ -3,13 +3,13 @@ import { ExpandableListComponent, ExpandableListModule } from 'angular-expandabl
 import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 
 const NUMBER_OF_DECIMALS: number = 3;
-
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
+  @Input() numBoundingBoxes: number;
   @Input() src: string;
   @Input() animalLabels: string[];
   @Input() animalPercentages: string[];
@@ -33,7 +33,11 @@ export class SidebarComponent implements OnInit {
     this.expandedMap = new Map();
   }
 
-  public getItemTitle(bb: BoundingBoxModel) {
+  public getItemTitle(bb: BoundingBoxModel, i: number) {
+    if (bb.id == this.newBoxId) {
+      return "New Bounding Box";
+    }
+
     let labelArr: string[] = Object.keys(bb.classes);
     let valueArr: number[] = Object.values(bb.classes).map((s: string) => parseFloat(s));
     let maxIndex = valueArr.indexOf(Math.max(...valueArr));
@@ -41,13 +45,13 @@ export class SidebarComponent implements OnInit {
     return labelArr[maxIndex] + ": " + number + "%";
   }
 
-  public getColor(bb: BoundingBoxModel): string {
-    return bb.color;
-  }
-
   public getAnimalLabels(bb: BoundingBoxModel): string[] {
     let result = Object.keys(bb.classes);
     return result;
+  }
+
+  public getColor(bb: BoundingBoxModel): string {
+    return bb.color;
   }
 
   public getAnimalValues(bb: BoundingBoxModel): string[] {
@@ -121,11 +125,13 @@ export class SidebarComponent implements OnInit {
     this.deleteBoxesEvent.emit([bb]);
   }
 
-  public metadataChange(event: any) {
-    console.log("Metadata changed");
-  }
-
   public trackByFn(index: any, item: any) {
     return index;
+  }
+
+  public leaveFocus() {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   }
 }

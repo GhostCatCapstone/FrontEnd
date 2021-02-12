@@ -133,6 +133,9 @@ h4 {
   margin: 0 0 8px 0;
 }
 
-.expandable-list .expandable-list-item .expandable-list-item-title .expandable-list-item__dropdown {
-  display: block;
+.item-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
 }

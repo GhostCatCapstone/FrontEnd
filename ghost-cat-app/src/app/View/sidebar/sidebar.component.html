@@ -17,12 +17,12 @@
     </div>
 
     <expandable-list>
-        <expandable-list-item *ngFor="let bb of boundingBoxes" [isExpanded]="isSelected(bb)"
+        <expandable-list-item *ngFor="let bb of boundingBoxes; let j = index" [isExpanded]="isSelected(bb)"
             (onExpanded)="expanded($event, bb)">
             <span title class="item-title">
                 <div>
                     <i class="fas fa-circle" [style.color]="getColor(bb)"></i>
-                    <a>{{getItemTitle(bb)}}</a>
+                    <a>{{getItemTitle(bb, j)}}</a>
                 </div>
                 <div *ngIf="bb.id != newBoxId">
                     <span title="Confirm" (click)="confirmBox(bb)">
@@ -41,12 +41,15 @@
                 </div>
             </span>
 
-            <span item *ngFor="let animal of getAnimalLabels(bb); let i = index">
+            <span item *ngFor="let animal of getAnimalLabels(bb); let i = index; trackBy:trackByFn">
                 <div class="list-item">
-                    <mat-form-field class="form-field" *ngIf="bb.id != newBoxId">
-                        <mat-label>{{animal}}</mat-label>
-                        <input matInput value="{{getAnimalValues(bb)[i]}}">
-                    </mat-form-field>
+                    <div class="item-wrapper" *ngIf="bb.id != newBoxId">
+                        <mat-form-field class="form-field">
+                            <mat-label>{{animal}}</mat-label>
+                            <input matInput type="text" value="{{getAnimalValues(bb)[i]}}" (keyup.enter)="leaveFocus()">
+                        </mat-form-field>
+                        <a>%</a>
+                    </div>
 
                     <div class="new-box" *ngIf="bb.id == newBoxId">
                         <a>{{animal}}</a>
@@ -54,7 +57,6 @@
                     </div>
                 </div>
             </span>
-
         </expandable-list-item>
     </expandable-list>
 
@@ -62,7 +64,7 @@
         <h4>Metadata</h4>
         <mat-form-field class="form-field" *ngFor="let metadata of metadataValues; let i = index; trackBy:trackByFn">
             <mat-label>{{metadataLabels[i]}}</mat-label>
-            <input matInput [(ngModel)]="metadataValues[i]" (ngModelChange)="metadataChange($event)">
+            <input matInput type="text" [(ngModel)]="metadataValues[i]" (keyup.enter)="leaveFocus()">
         </mat-form-field>
     </div>
 </div>

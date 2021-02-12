@@ -249,11 +249,10 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     this.sidebarComponent.selectedBoxChanged(null);
     this.imageDetailsComponent.addNewBoundingBox(false);
-    this.appRef.tick();
     this.newBBLookup = { id: "", src: "" };
   }
 
-  private confirmBox(id: string, className: string = "") {
+  public confirmBox(id: string, className: string = "") {
     let item = this.items[this.currIndex];
 
     if (item != undefined) {
