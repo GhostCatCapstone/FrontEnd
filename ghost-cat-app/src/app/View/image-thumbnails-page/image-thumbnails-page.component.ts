@@ -105,7 +105,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
                 thumb: image.imgLink,
                 classLabels: [].concat.apply(
                   [],
-                  image.boundingBoxes.map((bb) => Object.keys(bb.classes)).filter((v, i, a) => a.indexOf(v) === i)
+                  image.boundingBoxes.map((bb) => Object.keys(<any>bb.classes)).filter((v, i, a) => a.indexOf(v) === i)
                 ),
                 metadataLabels: [
                   'Image Width',
@@ -166,8 +166,15 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   private initializeBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
     for (let i = 0; i < boxes.length; ++i) {
-      let valueArr: number[] = Object.values(boxes[i].classes).map((s: string) => parseFloat(s));
-      boxes[i].classValues = valueArr.map((n: number) => (n * 100).toFixed(NUMBER_OF_DECIMALS));
+      let keys = Object.keys(<any>boxes[i].classes);
+      let values = Object.values(<any>boxes[i].classes);
+
+      let newClasses: ClassValue[] = [];
+      for (let j = 0; j < keys.length; ++j) {
+        let val = (<number>values[j]) * 100;
+        newClasses.push(new ClassValue(keys[j], val));
+      }
+      boxes[i].classes = newClasses;
     }
     return this.addColorsToBoundingBoxes(boxes);
   }
@@ -218,7 +225,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     if (item != undefined) {
       let newBB = this.createBBObject(src, item);
-      let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color, newBB.classValues);
+      let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
 
       item.data.boundingBoxes.push(newBB);
       item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
@@ -234,20 +241,13 @@ export class ImageThumbnailsPageComponent implements OnInit {
     let myId = uuid.v4();
     let parts = src.split("/");
     let imgId = parts[parts.length - 1];
-    let classValues = [];
 
-    let classes = {};
-    let classNames = [];
+    let classes: ClassValue[] = [];
     for (let index in item.data.classLabels) {
-      classNames.push(item.data.classLabels[index]);
+      classes.push(new ClassValue(item.data.classLabels[index], 0));
     }
 
-    classNames.forEach(function (c) {
-      classes[c] = 0
-      classValues.push(0);
-    });
-
-    return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "", classValues: classValues };
+    return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
   }
 
   public selectNewBoxClass(className: string) {
@@ -264,27 +264,20 @@ export class ImageThumbnailsPageComponent implements OnInit {
     let zeroVal = 0;
 
     if (item != undefined) {
-      let bb = item.data.boundingBoxes.find(b => b.id == id);
+      let bb = <BoundingBoxModel>item.data.boundingBoxes.find(b => b.id == id);
 
       if (bb != undefined) {
         if (className == "") {
-          className = Object.keys(bb.classes).reduce(function (a, b) { return bb.classes[a] > bb.classes[b] ? a : b });
+          className = bb.classes.reduce(function (a, b) {
+            return a.classValue > b.classValue ? a : b
+          }).className;
         }
 
-        let index = Object.keys(bb.classes).indexOf(className);
-        for (let i = 0; i < bb.classValues.length; ++i) {
-          if (i == index) {
-            bb.classValues[i] = confirmVal.toFixed(NUMBER_OF_DECIMALS);
+        for (let i = 0; i < bb.classes.length; ++i) {
+          if (bb.classes[i].className == className) {
+            bb.classes[i].classValue = parseFloat(confirmVal.toFixed(NUMBER_OF_DECIMALS));
           } else {
-            bb.classValues[i] = zeroVal.toFixed(NUMBER_OF_DECIMALS);
-          }
-        }
-
-        for (let c in bb.classes) {
-          if (c == className) {
-            bb.classes[c] = 1;
-          } else {
-            bb.classes[c] = 0;
+            bb.classes[i].classValue = parseFloat(zeroVal.toFixed(NUMBER_OF_DECIMALS));
           }
         }
       }

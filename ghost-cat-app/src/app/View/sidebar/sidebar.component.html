@@ -46,7 +46,8 @@
                     <div class="item-wrapper" *ngIf="bb.id != newBoxId">
                         <mat-form-field class="form-field">
                             <mat-label>{{class}}</mat-label>
-                            <input matInput type="number" [(ngModel)]="bb.classValues[i]" (keyup.enter)="leaveFocus()">
+                            <input matInput type="number" [ngModel]="getClassValues(bb, i)"
+                                (ngModelChange)="setClassValues(bb, i, $event)" (keyup.enter)="leaveFocus()">
                         </mat-form-field>
                         <a>%</a>
                     </div>

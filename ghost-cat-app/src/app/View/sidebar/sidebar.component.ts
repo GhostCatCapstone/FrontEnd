@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ExpandableListComponent, ExpandableListModule } from 'angular-expandable-list';
 import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
+import { ClassValue } from 'src/app/Model/ClassValue';
 
 const NUMBER_OF_DECIMALS: number = 3;
 @Component({
@@ -37,19 +38,23 @@ export class SidebarComponent implements OnInit {
       return "New Bounding Box";
     }
 
-    let labelArr: string[] = Object.keys(bb.classes);
-    let valueArr: number[] = bb.classValues.map((s: string) => parseFloat(s));
-    let maxIndex = valueArr.indexOf(Math.max(...valueArr));
-    if (maxIndex >= 0) {
-      let value = (valueArr[maxIndex]).toFixed(NUMBER_OF_DECIMALS);
-      return labelArr[maxIndex] + ": " + value + "%";
-    }
-    return "";
+    let classValue = bb.classes.reduce(function (a, b) {
+      return a.classValue > b.classValue ? a : b
+    });
+    return classValue.className + ": " + classValue.classValue.toFixed(NUMBER_OF_DECIMALS) + "%";
   }
 
   public getClassLabels(bb: BoundingBoxModel): string[] {
-    let result = Object.keys(bb.classes);
+    let result = bb.classes.map((c: ClassValue) => c.className);
     return result;
+  }
+
+  public getClassValues(bb: BoundingBoxModel, index: number): number {
+    return bb.classes[index].classValue;
+  }
+
+  public setClassValues(bb: BoundingBoxModel, index: number, event: any) {
+    bb.classes[index].classValue = event;
   }
 
   public getColor(bb: BoundingBoxModel): string {

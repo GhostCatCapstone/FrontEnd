@@ -1,3 +1,5 @@
+import { ClassValue } from "./ClassValue";
+
 export class BoundingBoxModel {
   constructor(
     public id: string,
@@ -6,8 +8,7 @@ export class BoundingBoxModel {
     public yVal: number,
     public width: number,
     public height: number,
-    public classes: any,
+    public classes: ClassValue[],
     public color: string,
-    public classValues: string[],
   ) { }
 }
