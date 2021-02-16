@@ -8,6 +8,6 @@ export class BoundingBoxModel {
     public height: number,
     public classes: any,
     public color: string,
-    public classValues: string[] = [],
+    public classValues: string[],
   ) { }
 }
