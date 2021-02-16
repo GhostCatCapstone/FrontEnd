@@ -10,18 +10,19 @@
       (indexChange)="indexChanged($event)">
     </gallery>
 
-    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data">
 
       <app-image-details #image [src]="data.src" [boundingBoxes]="data.boundingBoxes"
         (selectBoundingBoxEvent)="selectedBoundingBox($event)" (drawnShapeEvent)="drewShape($event)">
       </app-image-details>
     </ng-template>
 
-    <app-sidebar #sidebar [src]="items[currIndex].data.src" [animalLabels]="items[currIndex].data.animalLabels"
-      [animalPercentages]="items[currIndex].data.animalPercentages"
+    <app-sidebar #sidebar [src]="items[currIndex].data.src" [classLabels]="items[currIndex].data.classLabels"
       [metadataLabels]="items[currIndex].data.metadataLabels" [metadataValues]="items[currIndex].data.metadataValues"
-      [boundingBoxes]="items[currIndex].data.boundingBoxes" (deleteBoxesEvent)="deletedBoundingBoxes($event)"
-      (addNewBoxEvent)="addNewBox($event)" (cancelNewBoxEvent)="cancelAddingBox()">
+      [boundingBoxes]="items[currIndex].data.boundingBoxes" [newBoxId]="newBBLookup.id"
+      (deleteBoxesEvent)="deletedBoundingBoxes($event)" (addNewBoxEvent)="addNewBox($event)"
+      (cancelNewBoxEvent)="cancelAddingBox()" (selectClassEvent)="selectNewBoxClass($event)"
+      (confirmEvent)="confirmBox($event)">
     </app-sidebar>
 
     <div class="topnav">

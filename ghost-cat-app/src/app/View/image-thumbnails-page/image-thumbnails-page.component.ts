@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Gallery, GalleryItem, GalleryRef } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
@@ -24,14 +24,18 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public currIndex: number = 0;
   public selectedBox: BoundingBoxModel;
-  private colorsUsed: number = 0;
-  private newBBLookup = { id: "", src: "" };
+  public newBBLookup = { id: "", src: "" };
+
+  private get imageDetailsComponent() {
+    return this.imageDetailsComponentList.find(component => component.src == this.items[this.currIndex]["data"]["src"]);
+  }
 
   constructor(
     public gallery: Gallery,
     private router: Router,
     private server: ServerFacade,
     public cdr: ChangeDetectorRef,
+    public appRef: ApplicationRef,
   ) { }
 
   ngOnInit() {
@@ -39,8 +43,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
       new CustomItem({
         src: '',
         thumb: '',
-        animalLabels: [],
-        animalPercentages: [],
+        classLabels: [],
         metadataLabels: [],
         metadataValues: [],
         boundingBoxes: [],
@@ -98,13 +101,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
               new CustomItem({
                 src: image.imgLink,
                 thumb: image.imgLink,
-                animalLabels: [].concat.apply(
+                classLabels: [].concat.apply(
                   [],
-                  image.boundingBoxes.map((bb) => Object.keys(bb.classes))
-                ),
-                animalPercentages: [].concat.apply(
-                  [],
-                  image.boundingBoxes.map((bb) => Object.values(bb.classes))
+                  image.boundingBoxes.map((bb) => Object.keys(<any>bb.classes)).filter((v, i, a) => a.indexOf(v) === i)
                 ),
                 metadataLabels: [
                   'Image Width',
@@ -128,7 +127,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
                   image.deployment,
                   image.night_im,
                 ],
-                boundingBoxes: this.addColorsToBoundingBoxes(image.boundingBoxes),
+                boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
               })
           );
         } else if (response.success) {
@@ -138,8 +137,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
             new CustomItem({
               src: '',
               thumb: '',
-              animalLabels: [],
-              animalPercentages: [],
+              classLabels: [],
               metadataLabels: [],
               metadataValues: [],
               boundingBoxes: [],
@@ -164,16 +162,33 @@ export class ImageThumbnailsPageComponent implements OnInit {
     }
   }
 
+  private initializeBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
+    for (let i = 0; i < boxes.length; ++i) {
+      let keys = Object.keys(<any>boxes[i].classes);
+      let values = Object.values(<any>boxes[i].classes);
+
+      let newClasses: ClassValue[] = [];
+      for (let j = 0; j < keys.length; ++j) {
+        let val = (<number>values[j]) * 100;
+        newClasses.push(new ClassValue(keys[j], val));
+      }
+      boxes[i].classes = newClasses;
+    }
+    return this.addColorsToBoundingBoxes(boxes);
+  }
+
   private addColorsToBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
     for (let i = 0; i < COLORS.length && i < boxes.length; ++i) {
       boxes[i].color = COLORS[i];
-      this.colorsUsed = i;
     }
     return boxes;
   }
 
   public indexChanged(event) {
     this.currIndex = event.currIndex;
+    if (this.newBBLookup.id != "") {
+      this.cancelAddingBox();
+    }
   }
 
   goToPage(pageName: string): void {
@@ -186,7 +201,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     this.sidebarComponent.selectedBoxChanged(bb);
   }
 
-  @ViewChild('image') imageDetailsComponent: ImageDetailsComponent;
+  @ViewChildren('image') imageDetailsComponentList: QueryList<ImageDetailsComponent>;
 
   public deletedBoundingBoxes(bb: BoundingBoxModel[]) {
     for (let i = 0; i < this.items.length; ++i) {
@@ -199,33 +214,69 @@ export class ImageThumbnailsPageComponent implements OnInit {
         }
       }
 
-      this.items[i].data.boundingBoxes = filteredBoxes;
+      this.items[i].data.boundingBoxes = this.addColorsToBoundingBoxes(filteredBoxes);
     }
   }
 
   public addNewBox(src: string) {
-    if (src == null) {
-      this.imageDetailsComponent.addNewBoundingBox(false);
-      this.newBBLookup = null;
-    } else {
-      let myId = uuid.v4();
-      var parts = src.split("/");
-      var imgId = parts[parts.length - 1];
-      let newBBModel: BoundingBoxModel = null;
+    let item = this.items.find(item => item.data.src == src);
 
-      let item = this.items.find(item => item.data.src == src);
-      if (item != undefined) {
-        let classes = { "Mule Deer": 0, "Cow": 0, "Sheep": 0, "Other": 0 };
+    if (item != undefined) {
+      let newBB = this.createBBObject(src, item);
+      let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
 
-        let newBB = { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: COLORS[++this.colorsUsed] };
-        newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
-        item.data.boundingBoxes.unshift(newBB);
-      }
+      item.data.boundingBoxes.push(newBB);
+      item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
+      this.appRef.tick();
 
       this.newBBLookup = { id: newBBModel.id, src: src };
       this.sidebarComponent.selectedBoxChanged(newBBModel);
-      this.sidebarComponent.addingNewBoxId(newBBModel.id);
       this.imageDetailsComponent.addNewBoundingBox(true);
+    }
+  }
+
+  private createBBObject(src: string, item: any): any {
+    let myId = uuid.v4();
+    let parts = src.split("/");
+    let imgId = parts[parts.length - 1];
+
+    let classes: ClassValue[] = [];
+    for (let index in item.data.classLabels) {
+      classes.push(new ClassValue(item.data.classLabels[index], 0));
+    }
+
+    return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
+  }
+
+  public selectNewBoxClass(className: string) {
+    this.confirmBox(this.newBBLookup.id, className);
+
+    this.sidebarComponent.selectedBoxChanged(null);
+    this.imageDetailsComponent.addNewBoundingBox(false);
+    this.newBBLookup = { id: "", src: "" };
+  }
+
+  public confirmBox(id: string, className: string = "") {
+    let item = this.items[this.currIndex];
+
+    if (item != undefined) {
+      let bb = <BoundingBoxModel>item.data.boundingBoxes.find(b => b.id == id);
+
+      if (bb != undefined) {
+        if (className == "") {
+          className = bb.classes.reduce(function (a, b) {
+            return a.classValue > b.classValue ? a : b
+          }).className;
+        }
+
+        for (let i = 0; i < bb.classes.length; ++i) {
+          if (bb.classes[i].className == className) {
+            bb.classes[i].classValue = 100;
+          } else {
+            bb.classes[i].classValue = 0;
+          }
+        }
+      }
     }
   }
 
@@ -233,8 +284,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     let item = this.items.find(item => item.data.src == this.newBBLookup.src);
     let boxes = item.data.boundingBoxes.filter(box => box.id != this.newBBLookup.id);
     item.data.boundingBoxes = boxes;
-    this.newBBLookup = null;
-    this.colorsUsed--;
+    this.newBBLookup = { id: "", src: "" };
     this.imageDetailsComponent.addNewBoundingBox(false);
   }
 
