@@ -42,31 +42,11 @@ app-sidebar {
         border-radius: 5px;
         border: 1px solid #707070;
     }
-
-    
-.fa-search{ 
-    color:#00AEEF;
-}
-
-.fa-cog{ 
-    color:#00AEEF;
-}
-
-.fa-door-open{ 
-    color:#00AEEF;
-}
-
-.topnav {
-    overflow: hidden;
-    background-color: white;
-  }
-
-  .topnav .fa-search { 
-    text-align: center;
-    padding: 5px;
-    position: relative; top:10px;
-}
-
-.fa-search .fa-cog { position: relative; top:20px; }
-
-.fa-cog .fa-door-open { position: relative; top:20px;}
+    .icon-bar {
+        width: 30px;
+        background-color: white;
+        padding: 5px;
+        color:#00AEEF;
+    }
+      
+      

@@ -24,18 +24,11 @@
       [boundingBoxes]="items[currIndex].data.boundingBoxes">
     </app-sidebar>
 
-    <div class="topnav">
-      <span title="New Search" (click)="goToPage('search')">
-        <i class="fas fa-search fa-md" alt="New Search">
-          <span title="Settings" (click)="goToPage('settings')">
-            <i class="fas fa-cog" alt="Settings">
-              <span title="Logout" (click)="goToPage('login')">
-                <i class="fas fa-door-open" alt="Logout"></i>
-              </span>
-            </i>
-          </span>
-        </i>
-      </span>
+    <div class="icon-bar">
+      <div class="searchIco"><i class="fas fa-search fa-md" alt="New Search" (click)="goToPage('search')"></i></div>
+      <div class="cogIco"><i class="fas fa-cog" alt="Settings" (click)="goToPage('settings')"></i></div>
+      <div class="logoutIco"><i class="fas fa-door-open" alt="Logout" (click)="goToPage('login')"></i></div>
+      <div class="downloadIco"><i class="fas fa-download" alt="Download CSV Metadata" (click)="downloadCsv()"></i></div>
     </div>
   </div>
 </body>
