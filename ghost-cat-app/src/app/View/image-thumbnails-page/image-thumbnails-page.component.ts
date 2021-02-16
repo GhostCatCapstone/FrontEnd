@@ -14,8 +14,6 @@ import { ImageDetailsComponent } from '../image-details/image-details.component'
 import * as uuid from 'uuid';
 import { Shape } from 'src/app/Model/Shape';
 
-const NUMBER_OF_DECIMALS: number = 3;
-
 @Component({
   selector: 'app-image-thumbnails-page',
   templateUrl: './image-thumbnails-page.component.html',
@@ -260,8 +258,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public confirmBox(id: string, className: string = "") {
     let item = this.items[this.currIndex];
-    let confirmVal = 100;
-    let zeroVal = 0;
 
     if (item != undefined) {
       let bb = <BoundingBoxModel>item.data.boundingBoxes.find(b => b.id == id);
@@ -275,9 +271,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
         for (let i = 0; i < bb.classes.length; ++i) {
           if (bb.classes[i].className == className) {
-            bb.classes[i].classValue = parseFloat(confirmVal.toFixed(NUMBER_OF_DECIMALS));
+            bb.classes[i].classValue = 100;
           } else {
-            bb.classes[i].classValue = parseFloat(zeroVal.toFixed(NUMBER_OF_DECIMALS));
+            bb.classes[i].classValue = 0;
           }
         }
       }
