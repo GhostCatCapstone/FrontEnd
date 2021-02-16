@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef, Compiler, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 import { Output, EventEmitter } from '@angular/core';
 import { Shape } from 'src/app/Model/Shape';
