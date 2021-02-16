@@ -36,6 +36,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     public gallery: Gallery,
     private router: Router,
     private server: ServerFacade,
+    public appRef: ApplicationRef,
   ) { }
 
   ngOnInit() {
