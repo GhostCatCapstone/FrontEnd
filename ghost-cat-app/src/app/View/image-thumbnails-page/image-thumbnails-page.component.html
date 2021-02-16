@@ -17,8 +17,7 @@
       </app-image-details>
     </ng-template>
 
-    <app-sidebar #sidebar [src]="items[currIndex].data.src" [animalLabels]="items[currIndex].data.animalLabels"
-      [animalPercentages]="items[currIndex].data.animalPercentages"
+    <app-sidebar #sidebar [src]="items[currIndex].data.src" [classLabels]="items[currIndex].data.classLabels"
       [metadataLabels]="items[currIndex].data.metadataLabels" [metadataValues]="items[currIndex].data.metadataValues"
       [boundingBoxes]="items[currIndex].data.boundingBoxes" [newBoxId]="newBBLookup.id"
       (deleteBoxesEvent)="deletedBoundingBoxes($event)" (addNewBoxEvent)="addNewBox($event)"

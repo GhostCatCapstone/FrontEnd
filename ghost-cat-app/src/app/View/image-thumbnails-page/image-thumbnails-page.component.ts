@@ -14,6 +14,8 @@ import { ImageDetailsComponent } from '../image-details/image-details.component'
 import * as uuid from 'uuid';
 import { Shape } from 'src/app/Model/Shape';
 
+const NUMBER_OF_DECIMALS: number = 3;
+
 @Component({
   selector: 'app-image-thumbnails-page',
   templateUrl: './image-thumbnails-page.component.html',
@@ -43,8 +45,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
       new CustomItem({
         src: '',
         thumb: '',
-        animalLabels: [],
-        animalPercentages: [],
+        classLabels: [],
         metadataLabels: [],
         metadataValues: [],
         boundingBoxes: [],
@@ -102,13 +103,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
               new CustomItem({
                 src: image.imgLink,
                 thumb: image.imgLink,
-                animalLabels: [].concat.apply(
+                classLabels: [].concat.apply(
                   [],
-                  image.boundingBoxes.map((bb) => Object.keys(bb.classes))
-                ),
-                animalPercentages: [].concat.apply(
-                  [],
-                  image.boundingBoxes.map((bb) => Object.values(bb.classes))
+                  image.boundingBoxes.map((bb) => Object.keys(bb.classes)).filter((v, i, a) => a.indexOf(v) === i)
                 ),
                 metadataLabels: [
                   'Image Width',
@@ -132,7 +129,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
                   image.deployment,
                   image.night_im,
                 ],
-                boundingBoxes: this.addColorsToBoundingBoxes(image.boundingBoxes),
+                boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
               })
           );
         } else if (response.success) {
@@ -142,8 +139,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
             new CustomItem({
               src: '',
               thumb: '',
-              animalLabels: [],
-              animalPercentages: [],
+              classLabels: [],
               metadataLabels: [],
               metadataValues: [],
               boundingBoxes: [],
@@ -166,6 +162,14 @@ export class ImageThumbnailsPageComponent implements OnInit {
     if (event.key == 'ArrowLeft') {
       this.galleryRef.prev();
     }
+  }
+
+  private initializeBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
+    for (let i = 0; i < boxes.length; ++i) {
+      let valueArr: number[] = Object.values(boxes[i].classes).map((s: string) => parseFloat(s));
+      boxes[i].classValues = valueArr.map((n: number) => (n * 100).toFixed(NUMBER_OF_DECIMALS));
+    }
+    return this.addColorsToBoundingBoxes(boxes);
   }
 
   private addColorsToBoundingBoxes(boxes: BoundingBoxModel[]): BoundingBoxModel[] {
@@ -233,8 +237,8 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     let classes = {};
     let classNames = [];
-    for (let index in item.data.animalLabels) {
-      classNames.push(item.data.animalLabels[index]);
+    for (let index in item.data.classLabels) {
+      classNames.push(item.data.classLabels[index]);
     }
 
     classNames.forEach(function (c) {

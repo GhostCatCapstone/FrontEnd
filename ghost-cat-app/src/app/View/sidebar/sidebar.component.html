@@ -1,8 +1,8 @@
 <div class="details">
     <h3 class="header">Image Details</h3>
 
-    <div class="animal-header">
-        <h4 class="animal-header-title">Animals</h4>
+    <div class="class-header">
+        <h4 class="class-header-title">Classes</h4>
         <div>
             <span title="Confirm All" (click)="confirmAllBoxes()">
                 <i class="fas fa-check-circle" alt="Confirm All"></i>
@@ -41,18 +41,18 @@
                 </div>
             </span>
 
-            <span item *ngFor="let animal of getAnimalLabels(bb); let i = index; trackBy:trackByFn">
+            <span item *ngFor="let class of getClassLabels(bb); let i = index; trackBy:trackByFn">
                 <div class="list-item">
                     <div class="item-wrapper" *ngIf="bb.id != newBoxId">
                         <mat-form-field class="form-field">
-                            <mat-label>{{animal}}</mat-label>
-                            <input matInput type="text" value="{{getAnimalValues(bb)[i]}}" (keyup.enter)="leaveFocus()">
+                            <mat-label>{{class}}</mat-label>
+                            <input matInput type="number" [(ngModel)]="bb.classValues[i]" (keyup.enter)="leaveFocus()">
                         </mat-form-field>
                         <a>%</a>
                     </div>
 
                     <div class="new-box" *ngIf="bb.id == newBoxId">
-                        <a>{{animal}}</a>
+                        <a>{{class}}</a>
                         <button class="button" (click)="selectClass(i)">Select</button>
                     </div>
                 </div>

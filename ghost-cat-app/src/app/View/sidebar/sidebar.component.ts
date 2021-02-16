@@ -11,8 +11,7 @@ const NUMBER_OF_DECIMALS: number = 3;
 export class SidebarComponent implements OnInit {
   @Input() numBoundingBoxes: number;
   @Input() src: string;
-  @Input() animalLabels: string[];
-  @Input() animalPercentages: string[];
+  @Input() classLabels: string[];
   @Input() metadataLabels: string[];
   @Input() metadataValues: string[];
   @Input() boundingBoxes: BoundingBoxModel[];
@@ -45,7 +44,7 @@ export class SidebarComponent implements OnInit {
     return labelArr[maxIndex] + ": " + number + "%";
   }
 
-  public getAnimalLabels(bb: BoundingBoxModel): string[] {
+  public getClassLabels(bb: BoundingBoxModel): string[] {
     let result = Object.keys(bb.classes);
     return result;
   }
@@ -54,7 +53,7 @@ export class SidebarComponent implements OnInit {
     return bb.color;
   }
 
-  public getAnimalValues(bb: BoundingBoxModel): string[] {
+  public getClassValues(bb: BoundingBoxModel): string[] {
     let valueArr: number[] = Object.values(bb.classes).map((s: string) => parseFloat(s));
     return valueArr.map((n: number) => (n * 100).toFixed(NUMBER_OF_DECIMALS) + "%");
   }
@@ -102,7 +101,7 @@ export class SidebarComponent implements OnInit {
 
   public selectClass(index: number) {
     if (this.drewShape) {
-      this.selectClassEvent.emit(this.animalLabels[index]);
+      this.selectClassEvent.emit(this.classLabels[index]);
       this.drewShape = false;
     } else {
       alert("Draw a bounding box before selecting a classification.");
