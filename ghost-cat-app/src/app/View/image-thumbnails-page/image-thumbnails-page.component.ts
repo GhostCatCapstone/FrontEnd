@@ -218,7 +218,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     if (item != undefined) {
       let newBB = this.createBBObject(src, item);
-      let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color);
+      let newBBModel = new BoundingBoxModel(newBB.id, newBB.imgId, newBB.xVal, newBB.yVal, newBB.width, newBB.height, newBB.classes, newBB.color, newBB.classValues);
 
       item.data.boundingBoxes.push(newBB);
       item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
@@ -232,8 +232,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   private createBBObject(src: string, item: any): any {
     let myId = uuid.v4();
-    var parts = src.split("/");
-    var imgId = parts[parts.length - 1];
+    let parts = src.split("/");
+    let imgId = parts[parts.length - 1];
+    let classValues = [];
 
     let classes = {};
     let classNames = [];
@@ -243,9 +244,10 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     classNames.forEach(function (c) {
       classes[c] = 0
+      classValues.push(0);
     });
 
-    return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "" };
+    return { id: myId, imgId: imgId, xVal: 0, yVal: 0, width: 0, height: 0, classes: classes, color: "", classValues: classValues };
   }
 
   public selectNewBoxClass(className: string) {
@@ -258,6 +260,8 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public confirmBox(id: string, className: string = "") {
     let item = this.items[this.currIndex];
+    let confirmVal = 100;
+    let zeroVal = 0;
 
     if (item != undefined) {
       let bb = item.data.boundingBoxes.find(b => b.id == id);
@@ -265,6 +269,15 @@ export class ImageThumbnailsPageComponent implements OnInit {
       if (bb != undefined) {
         if (className == "") {
           className = Object.keys(bb.classes).reduce(function (a, b) { return bb.classes[a] > bb.classes[b] ? a : b });
+        }
+
+        let index = Object.keys(bb.classes).indexOf(className);
+        for (let i = 0; i < bb.classValues.length; ++i) {
+          if (i == index) {
+            bb.classValues[i] = confirmVal.toFixed(NUMBER_OF_DECIMALS);
+          } else {
+            bb.classValues[i] = zeroVal.toFixed(NUMBER_OF_DECIMALS);
+          }
         }
 
         for (let c in bb.classes) {

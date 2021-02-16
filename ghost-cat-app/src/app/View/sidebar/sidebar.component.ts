@@ -38,10 +38,13 @@ export class SidebarComponent implements OnInit {
     }
 
     let labelArr: string[] = Object.keys(bb.classes);
-    let valueArr: number[] = Object.values(bb.classes).map((s: string) => parseFloat(s));
+    let valueArr: number[] = bb.classValues.map((s: string) => parseFloat(s));
     let maxIndex = valueArr.indexOf(Math.max(...valueArr));
-    let number = (valueArr[maxIndex] * 100).toFixed(NUMBER_OF_DECIMALS);
-    return labelArr[maxIndex] + ": " + number + "%";
+    if (maxIndex >= 0) {
+      let value = (valueArr[maxIndex]).toFixed(NUMBER_OF_DECIMALS);
+      return labelArr[maxIndex] + ": " + value + "%";
+    }
+    return "";
   }
 
   public getClassLabels(bb: BoundingBoxModel): string[] {
@@ -51,11 +54,6 @@ export class SidebarComponent implements OnInit {
 
   public getColor(bb: BoundingBoxModel): string {
     return bb.color;
-  }
-
-  public getClassValues(bb: BoundingBoxModel): string[] {
-    let valueArr: number[] = Object.values(bb.classes).map((s: string) => parseFloat(s));
-    return valueArr.map((n: number) => (n * 100).toFixed(NUMBER_OF_DECIMALS) + "%");
   }
 
   private isEqual(bb1: BoundingBoxModel, bb2: BoundingBoxModel) {

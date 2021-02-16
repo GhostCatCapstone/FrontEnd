@@ -65,7 +65,7 @@ export class ImageDetailsComponent implements OnInit {
         let y = this.canvasEl.height * currBox.yVal;
         let h = this.canvasEl.height * currBox.height;
         let w = this.canvasEl.width * currBox.width;
-        newBoxes.push(new BoundingBoxModel(currBox.id, currBox.imgId, x, y, w, h, currBox.classes, currBox.color));
+        newBoxes.push(new BoundingBoxModel(currBox.id, currBox.imgId, x, y, w, h, currBox.classes, currBox.color, currBox.classValues));
       }
     }
 
