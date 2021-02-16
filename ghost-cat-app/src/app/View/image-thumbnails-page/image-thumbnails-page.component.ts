@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ApplicationRef, Component, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { Gallery, GalleryItem, GalleryRef } from 'ng-gallery';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
@@ -36,8 +36,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
     public gallery: Gallery,
     private router: Router,
     private server: ServerFacade,
-    public cdr: ChangeDetectorRef,
-    public appRef: ApplicationRef,
   ) { }
 
   ngOnInit() {

@@ -8,9 +8,11 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { SearchPageComponent } from './search-page/search-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
 import { InternalRegisterPageComponent } from './internal-register-page/internal-register-page.component';
+import { MapViewPageComponent } from './map-view-page/map-view-page.component';
 
 const routes: Routes = [
   { path: 'thumbnails', component: ImageThumbnailsPageComponent },
+  { path: 'map', component: MapViewPageComponent },
   { path: 'search', component: SearchPageComponent },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
   { path: 'login', component: GhostCatLoginComponent },

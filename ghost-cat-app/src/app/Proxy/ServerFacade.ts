@@ -7,6 +7,8 @@ import { ImageQueryRequest } from '../Model/ImageQueryRequest';
 import { ImageQueryResponse } from '../Model/ImageQueryResponse';
 import { LoginRequest } from '../Model/LoginRequest';
 import { LoginResponse } from '../Model/LoginResponse';
+import { RegisterRequest } from '../Model/RegisterRequest';
+import { RegisterResponse } from '../Model/RegisterResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -44,51 +46,16 @@ export class ServerFacade {
       });
   }
 
-  public async register(
-    userIDInput: string | null,
-    newPasswordInput: string | null,
-    retypePasswordInput: string | null,
-    firstNameInput: string | null,
-    lastNameInput: string | null,
-    phone: string | null,
-    company: string | null,
-    router: Router
-  ): Promise<void> {
-    alert(
-      'User id: ' +
-        userIDInput +
-        '\nNew Password: ' +
-        newPasswordInput +
-        '\nRetyped Password: ' +
-        retypePasswordInput +
-        '\nFirst Name: ' +
-        firstNameInput +
-        '\nLast Name: ' +
-        lastNameInput +
-        '\nPhone: ' +
-        phone +
-        '\nCompany: ' +
-        company
-    );
-    //this url isn't real, need to replace with actual url once we have an endpoint.
+  public register(
+    registerRequest: RegisterRequest
+  ): Observable<RegisterResponse> {
     let url =
-      'https://az5x52mixa.execute-api.us-east-1.amazonaws.com/dev/register';
-    /*
-      this.http
-      .post<string>(url, registerRequest)
-      .pipe(catchError(this.handleError('register')))
-      .subscribe({
-        next(response: Response) {
-          alert('Got response from server: ' + JSON.stringify(response) + " With response code: " + response.status.toString());
-        },
-      });*/
+      'https://mhpljllqvj.execute-api.us-east-1.amazonaws.com/dev/register';
 
-    //if the response code is success, call the login page or log them in and go to the search page. Otherwise notify that the register failed
-    if (1) {
-      router.navigate([`login`]);
-    } else {
-      //tell them register failed
-    }
+    return this.http.post<RegisterResponse>(
+      url,
+      JSON.stringify(registerRequest)
+    );
   }
 
   /**

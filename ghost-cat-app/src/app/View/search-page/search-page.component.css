@@ -23,3 +23,12 @@ button {
 .marginLeft {
   margin-left: 20px;
 }
+
+.radio-button-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.radio-button {
+  margin: 5px;
+}

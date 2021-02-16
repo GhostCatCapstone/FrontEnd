@@ -19,6 +19,7 @@ export class SearchPageComponent implements OnInit {
   public secondDate: Date;
   public classes: string[];
   public cameraTraps: string[];
+  public selectedView: string;
 
   ngOnInit(): void {
     this.searchByAnimal = false;
@@ -26,6 +27,7 @@ export class SearchPageComponent implements OnInit {
     this.searchByDate = false;
     this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
     this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
+    this.selectedView = 'thumbnails';
   }
 
   enterSearch(): void {
@@ -35,7 +37,7 @@ export class SearchPageComponent implements OnInit {
         ) / 100
       : 0;
 
-    this.router.navigate(['thumbnails'], {
+    this.router.navigate([this.selectedView], {
       state: {
         searchParameters: {
           searchByAnimal: this.searchByAnimal,
