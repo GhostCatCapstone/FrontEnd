@@ -11,6 +11,7 @@ import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 import { COLORS } from 'src/app/Model/Colors';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ImageDetailsComponent } from '../image-details/image-details.component';
+import { Meta } from '@angular/platform-browser';
 import * as uuid from 'uuid';
 import { Shape } from 'src/app/Model/Shape';
 
@@ -21,6 +22,7 @@ import { Shape } from 'src/app/Model/Shape';
 })
 export class ImageThumbnailsPageComponent implements OnInit {
   items: GalleryItem[];
+  metaData: MetaData[];
 
   public currIndex: number = 0;
   public selectedBox: BoundingBoxModel;
@@ -95,7 +97,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
       .getImagesWithData(imageQueryRequest)
       .pipe(catchError(this.server.handleError('getImagesWithData')))
       .subscribe((response: ImageQueryResponse) => {
-        if (response.success && response.images.length) {
           this.items = response.images.map(
             (image) =>
               new CustomItem({
@@ -130,6 +131,22 @@ export class ImageThumbnailsPageComponent implements OnInit {
                 boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
               })
           );
+
+          if (response.success && response.images.length) {
+            this.metaData = response.images.map(
+              (image) =>
+                new MetaData(
+                String(image.deployment),
+                Number(image.imgWidth), 
+                Number(image.imgHeight),
+                String(image.flash),
+                String(image.make),
+                String(image.model),
+                new Date(image.date),
+                String(image.cameraTrap),
+                String(image.night_im),
+                String(image.id))
+            );
         } else if (response.success) {
           // no images matched the criteria so we keep it empty
           alert('No images matched your search criteria. Please try again');
@@ -193,6 +210,11 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
+  }
+
+  downloadCsv(): void {
+    let curDate = new Date().toLocaleDateString();
+    CsvDataService.exportToCsv("metadata-" + curDate +  ".csv", this.metaData);
   }
 
   @ViewChild('sidebar') sidebarComponent: SidebarComponent;
@@ -309,5 +331,83 @@ export class CustomItem implements GalleryItem {
 
   constructor(data: any) {
     this.data = data;
+  }
+}
+
+export class MetaData {
+  ID: string;
+  ExifImageWidth: number;
+  ExifImageHeight: number;
+  Flash: string;
+  Make: string;
+  Model: string;
+  DateTime: Date;
+  CameraTrapName: string;
+  deployment: string;
+  night_im: string;
+
+  constructor(
+  deployment: string,
+  ExifImageWidth: number,
+  ExifImageHeight: number,
+  Flash: string,
+  Make: string,
+  Model: string,
+  DateTime: Date,
+  CameraTrapName: string,
+  night_im: string,
+  ID: string) {
+    this.ID = ID;
+    this.ExifImageWidth = ExifImageWidth;
+    this.ExifImageHeight = ExifImageHeight;
+    this.Flash = Flash;
+    this.Make = Make;
+    this.Model = Model;
+    this.DateTime = DateTime;
+    this.CameraTrapName = CameraTrapName;
+    this.deployment = deployment;
+    this.night_im = night_im;
+  }
+}
+
+export class CsvDataService {
+  static exportToCsv(filename: string, rows: object[]) {
+    if (!rows || !rows.length) {
+      return;
+    }
+    const separator = ',';
+    const keys = Object.keys(rows[0]);
+    const csvContent =
+      keys.join(separator) +
+      '\n' +
+      rows.map(row => {
+        return keys.map(k => {
+          let cell = row[k] === null || row[k] === undefined ? '' : row[k];
+          cell = cell instanceof Date
+            ? cell.toLocaleString()
+            : cell.toString().replace(/"/g, '""');
+          if (cell.search(/("|,|\n)/g) >= 0) {
+            cell = `"${cell}"`;
+          }
+          return cell;
+        }).join(separator);
+      }).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+      navigator.msSaveBlob(blob, filename);
+    } else {
+      const link = document.createElement('a');
+      if (link.download !== undefined) {
+        // Browsers that support HTML5 download attribute
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
   }
 }
