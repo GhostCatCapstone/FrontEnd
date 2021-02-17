@@ -75,6 +75,23 @@
     </mat-form-field>
   </div>
   <div>
+    <h3>View Options</h3>
+  </div>
+  <div>
+    <mat-radio-group
+      class="radio-button-group"
+      aria-label="Select preferred view option:"
+      [(ngModel)]="selectedView"
+    >
+      <mat-radio-button class="radio-button" value="map"
+        >Map View</mat-radio-button
+      >
+      <mat-radio-button class="radio-button" value="thumbnails"
+        >Image View</mat-radio-button
+      >
+    </mat-radio-group>
+  </div>
+  <div>
     <button (click)="enterSearch()">Search</button>
   </div>
 </body>

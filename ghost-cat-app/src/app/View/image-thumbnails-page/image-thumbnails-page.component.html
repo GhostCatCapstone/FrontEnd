@@ -6,29 +6,41 @@
 
 <body>
   <div class="thumbnails-page">
-    <gallery class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"
+    <gallery #galleryID class="gallery" [items]="items" [itemTemplate]="itemTemplate" [gestures]="false" [loop]="false"
       (indexChange)="indexChanged($event)">
     </gallery>
 
-    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+    <ng-template #itemTemplate let-index="index" let-type="type" let-data="data">
 
-      <!-- Image Details Component goes here -->
-      <app-image-details #image [src]="data.src" [boxes]="data.boundingBoxes"
-        (selectBoundingBoxEvent)="selectedBoundingBox($event)">
+      <app-image-details #image [src]="data.src" [boundingBoxes]="data.boundingBoxes"
+        (selectBoundingBoxEvent)="selectedBoundingBox($event)" (drawnShapeEvent)="drewShape($event)">
       </app-image-details>
     </ng-template>
 
-    <app-sidebar #sidebar [animalLabels]="items[currIndex].data.animalLabels"
-      [animalPercentages]="items[currIndex].data.animalPercentages"
+    <app-sidebar #sidebar [src]="items[currIndex].data.src" [classLabels]="items[currIndex].data.classLabels"
       [metadataLabels]="items[currIndex].data.metadataLabels" [metadataValues]="items[currIndex].data.metadataValues"
-      [boundingBoxes]="items[currIndex].data.boundingBoxes">
+      [boundingBoxes]="items[currIndex].data.boundingBoxes" [newBoxId]="newBBLookup.id"
+      (deleteBoxesEvent)="deletedBoundingBoxes($event)" (addNewBoxEvent)="addNewBox($event)"
+      (cancelNewBoxEvent)="cancelAddingBox()" (selectClassEvent)="selectNewBoxClass($event)"
+      (confirmEvent)="confirmBox($event)">
     </app-sidebar>
 
-    <div class="icon-bar">
-      <div class="searchIco"><i class="fas fa-search fa-md" alt="New Search" (click)="goToPage('search')"></i></div>
-      <div class="cogIco"><i class="fas fa-cog" alt="Settings" (click)="goToPage('settings')"></i></div>
-      <div class="logoutIco"><i class="fas fa-door-open" alt="Logout" (click)="goToPage('login')"></i></div>
-      <div class="downloadIco"><i class="fas fa-download" alt="Download CSV Metadata" (click)="downloadCsv()"></i></div>
+    <div class="topnav">
+      <span title="New Search" class="icon" (click)="goToPage('search')">
+        <i class="fas fa-search fa-md" alt="New Search"></i>
+      </span>
+
+      <span title="Settings" class="icon" (click)="goToPage('settings')">
+        <i class="fas fa-cog" alt="Settings"></i>
+      </span>
+
+      <span title="Logout" class="icon" (click)="goToPage('login')">
+        <i class="fas fa-door-open" alt="Logout"></i>
+      </span>
+      
+      <span title="DownloadCSV" class="icon" (click)="downloadCsv()">
+        <i class="fas fa-download" alt="Download CSV Metadata"></i>
+      </span>
     </div>
   </div>
 </body>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as crypto from 'crypto-js';
 import { ServerFacade } from '../../Proxy/ServerFacade';
@@ -13,9 +13,9 @@ export class GhostCatLoginComponent implements OnInit {
   public email: string = '';
   public password: string = '';
 
-  constructor(private router: Router, private server: ServerFacade) {}
+  constructor(private router: Router, private server: ServerFacade) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
@@ -28,5 +28,12 @@ export class GhostCatLoginComponent implements OnInit {
       passwordHash
     );
     this.server.login(loginRequest, this.router);
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key == 'Enter') {
+      this.sendLoginRequest();
+    }
   }
 }
