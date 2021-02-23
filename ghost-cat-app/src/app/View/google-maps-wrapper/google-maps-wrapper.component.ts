@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
 
 @Component({
@@ -7,9 +7,6 @@ import { CameraLocation } from 'src/app/Model/CameraLocation';
   styleUrls: ['./google-maps-wrapper.component.css'],
 })
 export class GoogleMapsWrapperComponent implements OnInit {
-  @ViewChild('map') mapElement: any;
-  map: google.maps.Map;
-
   @Input() latitude: number;
   @Input() longitude: number;
   @Input() cameraLocations: CameraLocation[];
