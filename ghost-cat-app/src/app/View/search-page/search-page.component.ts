@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CameraLocation } from 'src/app/Model/CameraLocation';
 
 @Component({
   selector: 'app-search-page',
@@ -20,6 +21,7 @@ export class SearchPageComponent implements OnInit {
   public classes: string[];
   public cameraTraps: string[];
   public selectedView: string;
+  public cameraLocations: CameraLocation[];
 
   ngOnInit(): void {
     this.searchByAnimal = false;
@@ -28,6 +30,13 @@ export class SearchPageComponent implements OnInit {
     this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
     this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';
+    this.cameraLocations = [
+      new CameraLocation('site002', 40.77956, -110.37389),
+      new CameraLocation('site004', 40.77956, -110.47389),
+      new CameraLocation('site005', 40.77956, -110.57389),
+      new CameraLocation('site006', 40.77956, -110.67389),
+      new CameraLocation('site008', 40.77956, -110.77389),
+    ];
   }
 
   enterSearch(): void {

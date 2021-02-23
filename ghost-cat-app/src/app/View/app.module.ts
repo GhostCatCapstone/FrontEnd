@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
+import { AgmCoreModule } from '@agm/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +22,7 @@ import { ImageThumbnailsPageComponent } from './image-thumbnails-page/image-thum
 import { MapViewPageComponent } from './map-view-page/map-view-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
 import { ExpandableListModule } from 'angular-expandable-list';
+import { GoogleMapsWrapperComponent } from './google-maps-wrapper/google-maps-wrapper.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import { ExpandableListModule } from 'angular-expandable-list';
     AccountSettingsComponent,
     InternalRegisterPageComponent,
     MapViewPageComponent,
+    GoogleMapsWrapperComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,6 +50,9 @@ import { ExpandableListModule } from 'angular-expandable-list';
     MaterialModule,
     GalleryModule,
     ExpandableListModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyAZBl8XPkkHaHpd7_-lAGi9DqslF3S8l7s',
+    }),
   ],
   bootstrap: [AppComponent],
   entryComponents: [],
