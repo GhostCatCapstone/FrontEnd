@@ -62,4 +62,8 @@ export class SearchPageComponent implements OnInit {
       },
     });
   }
+
+  public updateCameraSite(cameraSite: CameraLocation): void {
+    this.cameraTrap = cameraSite.label;
+  }
 }

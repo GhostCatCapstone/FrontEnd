@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
 
 @Component({
@@ -11,7 +11,13 @@ export class GoogleMapsWrapperComponent implements OnInit {
   @Input() longitude: number;
   @Input() cameraLocations: CameraLocation[];
 
+  @Output() cameraSiteClicked = new EventEmitter<CameraLocation>();
+
   constructor() {}
 
   ngOnInit(): void {}
+
+  public clickedMarker(camera: CameraLocation) {
+    this.cameraSiteClicked.emit(camera);
+  }
 }
