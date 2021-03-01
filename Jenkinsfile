@@ -10,7 +10,7 @@ pipeline {
         
         stage('test') {
             steps {
-                sh 'echo "Eventually we want this to run tests: cd ghost-cat-app; ng test;"'
+                sh 'echo "Eventually we want this to run tests: cd ghost-cat-app; npm run ng test;"'
             }
         }
         
