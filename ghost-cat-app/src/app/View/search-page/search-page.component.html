@@ -36,6 +36,14 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <app-google-maps-wrapper
+      *ngIf="searchByCamera"
+      style="width: 100%; height: 400px"
+      [latitude]="40.77956"
+      [longitude]="-110.37389"
+      [cameraLocations]="cameraLocations"
+      (cameraSiteClicked)="updateCameraSite($event)"
+    ></app-google-maps-wrapper>
   </div>
   <div>
     <mat-checkbox id="Date" [(ngModel)]="searchByDate"
