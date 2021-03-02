@@ -15,6 +15,7 @@ export class SearchPageComponent implements OnInit {
   public searchByDate: boolean;
   public classChoice: string;
   public cameraTrap: string;
+  public cameraTrapsSelected: string[];
   public dateType: string;
   public firstDate: Date;
   public secondDate: Date;
@@ -22,11 +23,13 @@ export class SearchPageComponent implements OnInit {
   public cameraTraps: string[];
   public selectedView: string;
   public cameraLocations: CameraLocation[];
+  public temp: string[];
 
   ngOnInit(): void {
     this.searchByAnimal = false;
     this.searchByCamera = false;
     this.searchByDate = false;
+    this.cameraTrapsSelected = [];
     this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
     this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';
@@ -38,6 +41,7 @@ export class SearchPageComponent implements OnInit {
       new CameraLocation('site008', 40.77956, -110.77389),
     ];
   }
+
 
   enterSearch(): void {
     const confidenceLevel: number = this.searchByAnimal
@@ -53,7 +57,7 @@ export class SearchPageComponent implements OnInit {
           animalType: this.classChoice,
           confidenceLevel: confidenceLevel,
           searchByCamera: this.searchByCamera,
-          cameraTrap: this.cameraTrap,
+          cameraTrap: this.cameraTrapsSelected,
           searchByDate: this.searchByDate,
           dateType: this.dateType,
           firstDate: this.firstDate?.getTime(),
@@ -64,6 +68,10 @@ export class SearchPageComponent implements OnInit {
   }
 
   public updateCameraSite(cameraSite: CameraLocation): void {
-    this.cameraTrap = cameraSite.label;
+    if (this.cameraTrapsSelected.includes(cameraSite.label)){
+      this.cameraTrapsSelected = this.cameraTrapsSelected.filter(trap => trap != cameraSite.label);
+      } else {
+      this.cameraTrapsSelected = [...this.cameraTrapsSelected, cameraSite.label];
+      }
   }
 }

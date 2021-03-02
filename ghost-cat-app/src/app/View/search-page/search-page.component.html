@@ -30,9 +30,9 @@
     >
     <mat-form-field *ngIf="searchByCamera" class="marginLeft">
       <mat-label>Camera Trap</mat-label>
-      <mat-select [(value)]="cameraTrap" [required]="true">
+      <mat-select [(value)]="cameraTrapsSelected" [required]="true" multiple>
         <mat-option *ngFor="let trap of cameraTraps" [value]="trap">
-          {{ trap }}
+          {{trap}}
         </mat-option>
       </mat-select>
     </mat-form-field>
