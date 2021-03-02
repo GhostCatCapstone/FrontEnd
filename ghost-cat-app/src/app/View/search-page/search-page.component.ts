@@ -68,7 +68,10 @@ export class SearchPageComponent implements OnInit {
   }
 
   public updateCameraSite(cameraSite: CameraLocation): void {
-    //need to fix
-    //this.cameraTrap = cameraSite.label;
+    if (this.cameraTrapsSelected.includes(cameraSite.label)){
+      this.cameraTrapsSelected = this.cameraTrapsSelected.filter(trap => trap != cameraSite.label);
+      } else {
+      this.cameraTrapsSelected = [...this.cameraTrapsSelected, cameraSite.label];
+      }
   }
 }
