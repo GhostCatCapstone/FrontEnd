@@ -30,11 +30,9 @@
     >
     <mat-form-field *ngIf="searchByCamera" class="marginLeft">
       <mat-label>Camera Trap</mat-label>
-      <mat-select [(value)]="cameraTrap" [required]="true">
-        <input type="checkbox" value="Select All" id="Select_All" (change)="bulk('all')"> {{"Select All"}}
-        <input type="checkbox" value="Remove All" id="Remove_All" (change)="bulk('none')"> {{"Remove All"}}
+      <mat-select [(value)]="cameraTrapsSelected" [required]="true" multiple>
         <mat-option *ngFor="let trap of cameraTraps" [value]="trap">
-          <input type="checkbox" value="{{trap}}" id="{{trap}}" (change)="checkedCameras(trap)" class="checkedCamera"> {{trap}}
+          {{trap}}
         </mat-option>
       </mat-select>
     </mat-form-field>

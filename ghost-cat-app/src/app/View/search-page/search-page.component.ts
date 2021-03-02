@@ -23,6 +23,7 @@ export class SearchPageComponent implements OnInit {
   public cameraTraps: string[];
   public selectedView: string;
   public cameraLocations: CameraLocation[];
+  public temp: string[];
 
   ngOnInit(): void {
     this.searchByAnimal = false;
@@ -39,44 +40,6 @@ export class SearchPageComponent implements OnInit {
       new CameraLocation('site006', 40.77956, -110.67389),
       new CameraLocation('site008', 40.77956, -110.77389),
     ];
-    for(let i = 0; i < this.cameraTrapsSelected.length; i++){
-      alert("Current Cameras selected " + this.cameraTrapsSelected[i] + "\n");
-    }
-  }
-
-  checkedCameras(value) {
-    //this function is called to select or deselect individual camera check boxes and adjust the final search array(cameraTrapsSelected) accordingly
-    if ((<HTMLInputElement>document.getElementById(value)).checked === true) {
-        this.cameraTrapsSelected.push(value);
-        (<HTMLInputElement>document.getElementById("Remove_All")).checked = false;
-        (<HTMLInputElement>document.getElementById("Select_All")).checked = false;
-    }
-    else if ((<HTMLInputElement>document.getElementById(value)).checked === false) {
-        let indexx = this.cameraTrapsSelected.indexOf(value);
-        this.cameraTrapsSelected.splice(indexx,1);
-        (<HTMLInputElement>document.getElementById("Remove_All")).checked = false;
-        (<HTMLInputElement>document.getElementById("Select_All")).checked = false;
-    }
-  }
-
-  bulk(a) {
-    //this function is called to select or deselect all camera check boxes and adjust the final search array(cameraTrapsSelected) accordingly
-    if (a == "all") {
-        console.log("yes all");
-        this.cameraTrapsSelected = [];
-        for (let i = 0; i < this.cameraTraps.length; i++) {
-            (<HTMLInputElement>document.getElementsByClassName("checkedCamera")[i]).checked = true;
-            (<HTMLInputElement>document.getElementById("Remove_All")).checked = false;
-            this.cameraTrapsSelected.push(this.cameraTraps[i]);
-        }
-    }
-    if (a == "none") {
-        for (let i = 0; i < this.cameraTraps.length; i++) {
-            (<HTMLInputElement>document.getElementsByClassName("checkedCamera")[i]).checked = false;
-            (<HTMLInputElement>document.getElementById("Select_All")).checked = false;
-        }
-        this.cameraTrapsSelected = [];
-    }
   }
 
 
@@ -105,6 +68,7 @@ export class SearchPageComponent implements OnInit {
   }
 
   public updateCameraSite(cameraSite: CameraLocation): void {
-    this.cameraTrap = cameraSite.label;
+    //need to fix
+    //this.cameraTrap = cameraSite.label;
   }
 }
