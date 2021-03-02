@@ -8,7 +8,7 @@ export class ImageQueryRequest {
     public minDate?: number,
     public maxDate?: number,
     public deployment?: string,
-    public cameraTrap?: string,
+    public cameraTraps?: string[],
     public classes?: ClassValue[]
   ) {}
 }
