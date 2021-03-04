@@ -16,7 +16,20 @@ pipeline {
         
         stage('deploy') {
             steps {
-                sh 'sudo rm -rf /var/www/html/*; sudo mv ghost-cat-app/dist/ghost-cat-app/* /var/www/html/; sudo service httpd start;'
+                withCredentials([sshUserPrivateKey(credentialsId: 'c57af166-995f-4872-a291-0115eb44f665', keyFileVariable: 'identity', passphraseVariable: '', usernameVariable: 'userName')]) {
+                    script {
+                        def remote = [:]
+                        remote.name = 'web server'
+                        remote.host = 'ec2-3-141-196-176.us-east-2.compute.amazonaws.com'
+                        remote.user = userName
+                        remote.identityFile = identity
+                        remote.allowAnyHosts = true
+                        sshCommand remote: remote, command: "rm -rf /var/www/html/*"
+                        sh 'rm -rf ./html; mkdir html; mv ./ghost-cat-app/dist/ghost-cat-app/* ./html'
+                        sshPut remote: remote, from: './html', into: '/var/www'
+                    }
+                }
+                
             }
         }
     }
