@@ -1,0 +1,9 @@
+<agm-map [latitude]="latitude" [longitude]="longitude">
+  <agm-marker
+    *ngFor="let camera of cameraLocations"
+    [latitude]="camera.latitude"
+    [longitude]="camera.longitude"
+    [label]="camera.label"
+    (markerClick)="clickedMarker(camera)"
+  ></agm-marker>
+</agm-map>

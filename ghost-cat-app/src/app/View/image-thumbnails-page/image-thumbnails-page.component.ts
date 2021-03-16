@@ -60,7 +60,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     ];
 
     let classValueArray: ClassValue[] = [];
-    let cameraTrap: null | string = null;
+    let cameraTraps: null | string[] = [];
     let minDate: null | number = null;
     let maxDate: null | number = null;
 
@@ -74,7 +74,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     }
 
     if (history.state.searchParameters.searchByCamera) {
-      cameraTrap = history.state.searchParameters.cameraTrap;
+      cameraTraps = Object.assign([], history.state.searchParameters.cameraTrap);
     }
 
     if (history.state.searchParameters.searchByDate) {
@@ -96,9 +96,10 @@ export class ImageThumbnailsPageComponent implements OnInit {
       minDate,
       maxDate,
       null,
-      cameraTrap,
+      cameraTraps,
       classValueArray
     );
+
 
     this.server
       .getImagesWithData(imageQueryRequest)
