@@ -44,12 +44,12 @@
             <span item *ngFor="let class of getClassLabels(bb); let i = index; trackBy:trackByFn">
                 <div class="list-item">
                     <div class="item-wrapper" *ngIf="bb.id != newBoxId">
-                        <mat-form-field class="form-field">
+                        <mat-form-field class="form-field form-width">
                             <mat-label>{{class}}</mat-label>
-                            <input matInput type="number" [ngModel]="getClassValues(bb, i)"
-                                (ngModelChange)="setClassValues(bb, i, $event)" (keyup.enter)="leaveFocus()">
+                            <input matInput type="number" [ngModel]="getClassValues(bb, i)" readonly>
                         </mat-form-field>
                         <a>%</a>
+                        <button class="button" (click)="updateClass(bb, i)">Select</button>
                     </div>
 
                     <div class="new-box" *ngIf="bb.id == newBoxId">
@@ -65,7 +65,17 @@
         <h4>Metadata</h4>
         <mat-form-field class="form-field" *ngFor="let metadata of metadataValues; let i = index; trackBy:trackByFn">
             <mat-label>{{metadataLabels[i]}}</mat-label>
-            <input matInput type="text" [(ngModel)]="metadataValues[i]" (keyup.enter)="leaveFocus()">
+            <input *ngIf="metadataLabels[i] != 'Date'" matInput type="text" [ngModel]="getMetadataValues(i)"
+                (ngModelChange)="setMetadataValues(i, $event)" (keyup.enter)="leaveFocus()" readonly>
+
+            <div *ngIf="metadataLabels[i] == 'Date'" class="date-input">
+                <input *ngIf="metadataLabels[i] == 'Date'" matInput [matDatepicker]="picker"
+                    [ngModel]="getMetadataValues(i)" (ngModelChange)="setMetadataValues(i, $event)"
+                    (keyup.enter)="leaveFocus()" readonly />
+                <mat-datepicker-toggle *ngIf="metadataLabels[i] == 'Date'" matSuffix [for]="picker" [disabled]=true>
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </div>
         </mat-form-field>
     </div>
 </div>

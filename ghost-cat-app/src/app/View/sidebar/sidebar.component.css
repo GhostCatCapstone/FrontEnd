@@ -70,6 +70,10 @@ h4 {
   width: 100%;
 }
 
+.form-width {
+  width: 150px;
+}
+
 .fa-check-circle {
   color: black;
   padding-right: 8px;
@@ -106,6 +110,8 @@ h4 {
   color: #FFFFFF;
   border-radius: 5px;
   border: 1px solid #707070;
+  margin-left: auto;
+  width: 75px;
 }
 
 .cancel-button {
@@ -114,11 +120,13 @@ h4 {
   color: #FFFFFF;
   border-radius: 5px;
   border: 1px solid #707070;
+  margin-left: auto;
+  width: 75px;
 }
 
 .prompt {
   color: slategrey;
-  font-size: 10pt;
+  font-size: 8pt;
   margin: 0;
   text-transform: none;
   line-height: 20px;
@@ -127,6 +135,8 @@ h4 {
   justify-content: space-between;
   align-items: center;
   text-align: center;
+  padding-left: 32px;
+  padding-right: 16px;
 }
 
 .prompt p {
@@ -136,6 +146,12 @@ h4 {
 .item-wrapper {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+}
+
+.date-input {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

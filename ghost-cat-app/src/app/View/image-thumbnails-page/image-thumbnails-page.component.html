@@ -22,7 +22,7 @@
       [boundingBoxes]="items[currIndex].data.boundingBoxes" [newBoxId]="newBBLookup.id"
       (deleteBoxesEvent)="deletedBoundingBoxes($event)" (addNewBoxEvent)="addNewBox($event)"
       (cancelNewBoxEvent)="cancelAddingBox()" (selectClassEvent)="selectNewBoxClass($event)"
-      (confirmEvent)="confirmBox($event)">
+      (selectEvent)="selectBox($event)">
     </app-sidebar>
 
     <div class="topnav">
@@ -37,8 +37,8 @@
       <span title="Logout" class="icon" (click)="goToPage('login')">
         <i class="fas fa-door-open" alt="Logout"></i>
       </span>
-      
-      <span title="DownloadCSV" class="icon" (click)="downloadCsv()">
+
+      <span title="Download CSV" class="icon" (click)="downloadCsv()">
         <i class="fas fa-download" alt="Download CSV Metadata"></i>
       </span>
     </div>

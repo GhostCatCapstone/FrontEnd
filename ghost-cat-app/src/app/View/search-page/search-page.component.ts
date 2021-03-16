@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -52,5 +52,12 @@ export class SearchPageComponent implements OnInit {
         },
       },
     });
+  }
+
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key == 'Enter') {
+      this.enterSearch();
+    }
   }
 }
