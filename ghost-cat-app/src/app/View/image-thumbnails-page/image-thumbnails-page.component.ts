@@ -14,6 +14,12 @@ import { ImageDetailsComponent } from '../image-details/image-details.component'
 import { Meta } from '@angular/platform-browser';
 import * as uuid from 'uuid';
 import { Shape } from 'src/app/Model/Shape';
+import { DeleteBBoxRequest } from 'src/app/Model/DeleteBBoxRequest';
+import { DeleteBBoxResponse } from 'src/app/Model/DeleteBBoxResponse';
+import { AddBBoxRequest } from 'src/app/Model/AddBBoxRequest';
+import { AddBBoxResponse } from 'src/app/Model/AddBBoxResponse';
+import { UpdateBBoxRequest } from 'src/app/Model/UpdateBBoxRequest';
+import { UpdateBBoxResponse } from 'src/app/Model/UpdateBBoxResponse';
 
 @Component({
   selector: 'app-image-thumbnails-page',
@@ -26,7 +32,8 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   public currIndex: number = 0;
   public selectedBox: BoundingBoxModel;
-  public newBBLookup = { id: "", src: "" };
+  public newBBLookup = { id: "", src: "", imgId: "" };
+  private drawnShape: Shape = null;
 
   private get imageDetailsComponent() {
     return this.imageDetailsComponentList.find(component => component.src == this.items[this.currIndex]["data"]["src"]);
@@ -98,47 +105,44 @@ export class ImageThumbnailsPageComponent implements OnInit {
       .getImagesWithData(imageQueryRequest)
       .pipe(catchError(this.server.handleError('getImagesWithData')))
       .subscribe((response: ImageQueryResponse) => {
-          this.items = response.images.map(
-            (image) =>
-              new CustomItem({
-                src: image.imgLink,
-                thumb: image.imgLink,
-                classLabels: [].concat.apply(
-                  [],
-                  image.boundingBoxes.map((bb) => Object.keys(<any>bb.classes)).filter((v, i, a) => a.indexOf(v) === i)
-                ),
-                metadataLabels: [
-                  'Image Width',
-                  'Image Height',
-                  'Flash',
-                  'Make',
-                  'Model',
-                  'Date',
-                  'Camera Trap',
-                  'Deployment',
-                  'Night Image',
-                ],
-                metadataValues: [
-                  image.imgWidth,
-                  image.imgHeight,
-                  image.flash,
-                  image.make,
-                  image.model,
-                  image.date,
-                  image.cameraTrap,
-                  image.deployment,
-                  image.night_im,
-                ],
-                boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
-              })
-          );
+        this.items = response.images.map(
+          (image) =>
+            new CustomItem({
+              src: image.imgLink,
+              thumb: image.imgLink,
+              classLabels: this.getClassLabels(image),
+              metadataLabels: [
+                'Image Width',
+                'Image Height',
+                'Flash',
+                'Make',
+                'Model',
+                'Date',
+                'Camera Trap',
+                'Deployment',
+                'Night Image',
+              ],
+              metadataValues: [
+                image.imgWidth,
+                image.imgHeight,
+                image.flash,
+                image.make,
+                image.model,
+                new Date(image.date),
+                image.cameraTrap,
+                image.deployment,
+                image.night_im,
+              ],
+              boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
+            })
+        );
 
-          if (response.success && response.images.length) {
-            this.metaData = response.images.map(
-              (image) =>
-                new MetaData(
+        if (response.success && response.images.length) {
+          this.metaData = response.images.map(
+            (image) =>
+              new MetaData(
                 String(image.deployment),
-                Number(image.imgWidth), 
+                Number(image.imgWidth),
                 Number(image.imgHeight),
                 String(image.flash),
                 String(image.make),
@@ -147,7 +151,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
                 String(image.cameraTrap),
                 String(image.night_im),
                 String(image.id))
-            );
+          );
         } else if (response.success) {
           // no images matched the criteria so we keep it empty
           alert('No images matched your search criteria. Please try again');
@@ -165,6 +169,12 @@ export class ImageThumbnailsPageComponent implements OnInit {
           console.log('ERROR with image data request:', response.errorMsg);
         }
       });
+  }
+
+  private getClassLabels(image): Array<string> {
+    var classes = [].concat.apply([], image.boundingBoxes.map((bb) => Object.keys(<any>bb.classes)));
+    classes = classes.filter((v, i, a) => a.indexOf(v) === i);
+    return classes;
   }
 
   @ViewChild('galleryID') galleryRef: GalleryRef;
@@ -215,7 +225,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
   downloadCsv(): void {
     let curDate = new Date().toLocaleDateString();
-    CsvDataService.exportToCsv("metadata-" + curDate +  ".csv", this.metaData);
+    CsvDataService.exportToCsv("metadata-" + curDate + ".csv", this.metaData);
   }
 
   @ViewChild('sidebar') sidebarComponent: SidebarComponent;
@@ -234,6 +244,20 @@ export class ImageThumbnailsPageComponent implements OnInit {
       for (let j = 0; j < currBoxes.length; ++j) {
         if (bb.find(b => b.id == currBoxes[j].id) == undefined) {
           filteredBoxes.push(currBoxes[j]);
+        } else {
+          // TODO: this request should also add authentication
+          let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(dummyData.researcherID, dummyData.authToken, dummyData.projectID, currBoxes[j].id);
+
+          this.server.deleteBoundingBox(deleteBBoxRequest).pipe(catchError(this.server.handleError('deleteBBoxRequest'))).subscribe((response: DeleteBBoxResponse) => {
+            if (response == undefined || response == null) {
+              console.log('Received no response from server when deleting bounding box id: ' + currBoxes[j].id);
+            }
+            else if (!response.success) {
+              console.log('Error while deleting bounding box id: ' + currBoxes[j].id + " ");
+              console.log(response);
+              console.log(response.errorMsg);
+            }
+          })
         }
       }
 
@@ -252,7 +276,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
       item.data.boundingBoxes = this.addColorsToBoundingBoxes(item.data.boundingBoxes);
       this.appRef.tick();
 
-      this.newBBLookup = { id: newBBModel.id, src: src };
+      this.newBBLookup = { id: newBBModel.id, src: src, imgId: newBBModel.imgId };
       this.sidebarComponent.selectedBoxChanged(newBBModel);
       this.imageDetailsComponent.addNewBoundingBox(true);
     }
@@ -272,14 +296,36 @@ export class ImageThumbnailsPageComponent implements OnInit {
   }
 
   public selectNewBoxClass(className: string) {
-    this.confirmBox(this.newBBLookup.id, className);
+    this.selectBox({ id: this.newBBLookup.id, className: className }, false);
+
+    // TODO: this request should also add authentication
+    let addBBoxRequest: AddBBoxRequest = new AddBBoxRequest(
+      dummyData.researcherID,
+      dummyData.authToken,
+      dummyData.projectID,
+      this.newBBLookup.imgId,
+      this.drawnShape.x,
+      this.drawnShape.y,
+      this.drawnShape.w,
+      this.drawnShape.h,
+      className);
+
+    this.server.addBoundingBox(addBBoxRequest).pipe(catchError(this.server.handleError('addBoundingBox'))).subscribe((response: AddBBoxResponse) => {
+      if (response == undefined || response == null) {
+        console.log('Received no response from server while adding bounding box id: ' + this.newBBLookup.id);
+      }
+      else if (!response.success) {
+        console.log('Error while adding bounding box');
+        console.log(response);
+      }
+    })
 
     this.sidebarComponent.selectedBoxChanged(null);
     this.imageDetailsComponent.addNewBoundingBox(false);
-    this.newBBLookup = { id: "", src: "" };
+    this.newBBLookup = { id: "", src: "", imgId: "" };
   }
 
-  public confirmBox(id: string, className: string = "") {
+  public selectBox({ id, className }, updateServer = true) {
     let item = this.items[this.currIndex];
 
     if (item != undefined) {
@@ -299,6 +345,26 @@ export class ImageThumbnailsPageComponent implements OnInit {
             bb.classes[i].classValue = 0;
           }
         }
+
+        if (updateServer) {
+          let updateBBoxRequest: UpdateBBoxRequest = new UpdateBBoxRequest(
+            dummyData.researcherID,
+            dummyData.authToken,
+            dummyData.projectID,
+            id,
+            className
+          );
+
+          this.server.updateBoundingBox(updateBBoxRequest).pipe(catchError(this.server.handleError('updateBoundingBox'))).subscribe((response: UpdateBBoxResponse) => {
+            if (response == undefined || response == null) {
+              console.log('Received no response from server while updating bounding box id ' + id);
+            }
+            else if (!response.success) {
+              console.log('Error while updating bounding box id: ' + id + " ");
+              console.log(response);
+            }
+          })
+        }
       }
     }
   }
@@ -307,11 +373,12 @@ export class ImageThumbnailsPageComponent implements OnInit {
     let item = this.items.find(item => item.data.src == this.newBBLookup.src);
     let boxes = item.data.boundingBoxes.filter(box => box.id != this.newBBLookup.id);
     item.data.boundingBoxes = boxes;
-    this.newBBLookup = { id: "", src: "" };
+    this.newBBLookup = { id: "", src: "", imgId: "" };
     this.imageDetailsComponent.addNewBoundingBox(false);
   }
 
   public drewShape(shape: Shape) {
+    this.drawnShape = shape;
     if (shape == null) {
       this.sidebarComponent.shapeDrawn(false);
     } else {
@@ -348,16 +415,16 @@ export class MetaData {
   night_im: string;
 
   constructor(
-  deployment: string,
-  ExifImageWidth: number,
-  ExifImageHeight: number,
-  Flash: string,
-  Make: string,
-  Model: string,
-  DateTime: Date,
-  CameraTrapName: string,
-  night_im: string,
-  ID: string) {
+    deployment: string,
+    ExifImageWidth: number,
+    ExifImageHeight: number,
+    Flash: string,
+    Make: string,
+    Model: string,
+    DateTime: Date,
+    CameraTrapName: string,
+    night_im: string,
+    ID: string) {
     this.ID = ID;
     this.ExifImageWidth = ExifImageWidth;
     this.ExifImageHeight = ExifImageHeight;

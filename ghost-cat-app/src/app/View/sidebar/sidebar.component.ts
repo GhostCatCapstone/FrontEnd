@@ -21,7 +21,7 @@ export class SidebarComponent implements OnInit {
   @Output() addNewBoxEvent = new EventEmitter<string>();
   @Output() cancelNewBoxEvent = new EventEmitter<null>();
   @Output() selectClassEvent = new EventEmitter<string>();
-  @Output() confirmEvent = new EventEmitter<string>();
+  @Output() selectEvent = new EventEmitter<any>();
 
   private selectedBox: BoundingBoxModel;
   private expandedMap: Map<BoundingBoxModel, boolean> = null;
@@ -49,12 +49,16 @@ export class SidebarComponent implements OnInit {
     return result;
   }
 
-  public getClassValues(bb: BoundingBoxModel, index: number): number {
-    return bb.classes[index].classValue;
+  public getClassValues(bb: BoundingBoxModel, index: number): String {
+    return Number(bb.classes[index].classValue).toFixed(NUMBER_OF_DECIMALS);
   }
 
-  public setClassValues(bb: BoundingBoxModel, index: number, event: any) {
-    bb.classes[index].classValue = event;
+  public getMetadataValues(index: number): string {
+    return this.metadataValues[index];
+  }
+
+  public setMetadataValues(index: number, event: any) {
+    this.metadataValues[index] = event;
   }
 
   public getColor(bb: BoundingBoxModel): string {
@@ -90,7 +94,7 @@ export class SidebarComponent implements OnInit {
 
   public confirmAllBoxes() {
     for (let i = 0; i < this.boundingBoxes.length; ++i) {
-      this.confirmEvent.emit(this.boundingBoxes[i].id);
+      this.selectEvent.emit({ id: this.boundingBoxes[i].id, className: "" });
     }
   }
 
@@ -111,6 +115,10 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  public updateClass(bb: BoundingBoxModel, i: number) {
+    this.selectEvent.emit({ id: bb.id, className: this.classLabels[i] });
+  }
+
   public shapeDrawn(b: boolean) {
     this.drewShape = b;
   }
@@ -120,7 +128,7 @@ export class SidebarComponent implements OnInit {
   }
 
   public confirmBox(bb: BoundingBoxModel) {
-    this.confirmEvent.emit(bb.id);
+    this.selectEvent.emit({ id: bb.id, className: "" });
   }
 
   public deleteBox(bb: BoundingBoxModel) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
 
@@ -67,11 +67,18 @@ export class SearchPageComponent implements OnInit {
     });
   }
 
+  @HostListener('window:keyup', ['$event'])
+  keyEvent(event: KeyboardEvent) {
+    if (event.key == 'Enter') {
+      this.enterSearch();
+    }
+  }
+
   public updateCameraSite(cameraSite: CameraLocation): void {
     if (this.cameraTrapsSelected.includes(cameraSite.label)){
       this.cameraTrapsSelected = this.cameraTrapsSelected.filter(trap => trap != cameraSite.label);
-      } else {
+    } else {
       this.cameraTrapsSelected = [...this.cameraTrapsSelected, cameraSite.label];
-      }
+    }
   }
 }
