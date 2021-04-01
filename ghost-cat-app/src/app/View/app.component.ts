@@ -17,6 +17,5 @@ export class AppComponent {
   }
 
   ngOnInit(): void {
-    this.goToPage("login");
   }
 }

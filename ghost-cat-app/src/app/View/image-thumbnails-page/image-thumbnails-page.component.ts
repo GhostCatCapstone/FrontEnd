@@ -20,6 +20,8 @@ import { AddBBoxRequest } from 'src/app/Model/AddBBoxRequest';
 import { AddBBoxResponse } from 'src/app/Model/AddBBoxResponse';
 import { UpdateBBoxRequest } from 'src/app/Model/UpdateBBoxRequest';
 import { UpdateBBoxResponse } from 'src/app/Model/UpdateBBoxResponse';
+import { AuthorizationService } from "../../Auth/authorization.service";
+import { CognitoUser } from 'amazon-cognito-identity-js';
 
 @Component({
   selector: 'app-image-thumbnails-page',
@@ -45,6 +47,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     private server: ServerFacade,
     public cdr: ChangeDetectorRef,
     public appRef: ApplicationRef,
+    private auth: AuthorizationService,
   ) { }
 
   ngOnInit() {
@@ -88,18 +91,19 @@ export class ImageThumbnailsPageComponent implements OnInit {
       }
     }
 
-    // TODO: this request should also add authentication
+
+    var username = this.auth.getUserName();
+    var test = "UserID"
     const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
-      dummyData.researcherID,
-      dummyData.authToken,
-      dummyData.projectID,
+      test, //username goes here
+      //dummyData.authToken, //keep? 
+      dummyData.projectID, //backend has been set up to retrieve this
       minDate,
       maxDate,
       null,
       cameraTraps,
       classValueArray
     );
-
 
     this.server
       .getImagesWithData(imageQueryRequest)
@@ -226,6 +230,12 @@ export class ImageThumbnailsPageComponent implements OnInit {
   downloadCsv(): void {
     let curDate = new Date().toLocaleDateString();
     CsvDataService.exportToCsv("metadata-" + curDate + ".csv", this.metaData);
+  }
+
+  public async logout(): Promise<void> {
+    //console.log("About to call logout function\n");
+    this.auth.logout();
+    this.router.navigate([`/login`]);
   }
 
   @ViewChild('sidebar') sidebarComponent: SidebarComponent;

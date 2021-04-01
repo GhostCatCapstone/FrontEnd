@@ -9,21 +9,25 @@ import { SearchPageComponent } from './search-page/search-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
 import { InternalRegisterPageComponent } from './internal-register-page/internal-register-page.component';
 import { MapViewPageComponent } from './map-view-page/map-view-page.component';
+import { AuthGuardService as AuthGuard } from '../Auth/auth-guard.service';
+import { PasswordCodeResetComponent } from './password-code-reset/password-code-reset.component';
 
 const routes: Routes = [
-  { path: 'thumbnails', component: ImageThumbnailsPageComponent },
-  { path: 'map', component: MapViewPageComponent },
-  { path: 'search', component: SearchPageComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'thumbnails', component: ImageThumbnailsPageComponent, canActivate: [AuthGuard] },
+  { path: 'map', component: MapViewPageComponent, canActivate: [AuthGuard] },
+  { path: 'search', component: SearchPageComponent, canActivate: [AuthGuard] },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
   { path: 'login', component: GhostCatLoginComponent },
-  { path: 'settings', component: AccountSettingsComponent },
+  //{ path: 'settings', component: AccountSettingsComponent, canActivate: [AuthGuard] },
   { path: 'reset', component: PasswordResetComponent },
-  { path: 'register', component: RegisterPageComponent },
-  { path: 'internalRegister', component: InternalRegisterPageComponent },
+  { path: 'codeReset', component: PasswordCodeResetComponent },
+  //{ path: 'register', component: RegisterPageComponent },
+  //{ path: 'internalRegister', component: InternalRegisterPageComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

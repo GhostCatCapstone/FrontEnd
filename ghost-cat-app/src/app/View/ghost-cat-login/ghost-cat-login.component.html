@@ -9,8 +9,8 @@
   </div>
   <div>
     <mat-form-field class="inputBox">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" placeholder="Enter email address" [(ngModel)]="email" [required]="true" />
+      <mat-label>Username or Email</mat-label>
+      <input matInput type="email" placeholder="Enter username or email address" [(ngModel)]="email" [required]="true" />
     </mat-form-field>
   </div>
   <div>
@@ -23,10 +23,11 @@
     <button (click)="sendLoginRequest()">Login</button>
     <button (click)="goToPage('forgotpassword')">Forgot Password</button>
   </div>
-  <p>
+  <!--<p>
+    No longeer letting users register themselves
     <button (click)="goToPage('register')">Register</button>
     <button (click)="goToPage('reset')">Reset Password</button>
-  </p>
+  </p>-->
 
   <div class="bottom-spacing"></div>
 </body>
