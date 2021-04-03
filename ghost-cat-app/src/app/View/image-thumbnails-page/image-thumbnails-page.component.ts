@@ -20,6 +20,7 @@ import { AddBBoxResponse } from 'src/app/Model/AddBBoxResponse';
 import { UpdateBBoxRequest } from 'src/app/Model/UpdateBBoxRequest';
 import { UpdateBBoxResponse } from 'src/app/Model/UpdateBBoxResponse';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-image-thumbnails-page',
@@ -98,6 +99,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     }
 
     // TODO: this request should also add authentication
+    // TODO: this should use from database instead of dummy data
     const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
       dummyData.researcherID,
       dummyData.authToken,
@@ -215,9 +217,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
   }
 
   downloadCsv(): void {
-    let curDate = new Date().toLocaleDateString();
+    let curDate = (moment(new Date())).format('DD-MM-YYYY HH:mm:ss a');
     let rows = this.configureMetadataRows();
-    CsvDataService.exportToCsv("metadata-" + curDate + ".csv", rows);
+    CsvDataService.exportToCsv(curDate + "-metadata.csv", rows);
   }
 
   private configureMetadataRows() {
@@ -229,7 +231,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
     for (let i = 0; i < max; ++i) {
       let row = new MetadataRow();
       if (i == 0) {
+        // TODO: this should use data from back end not from dummydata 
         row.ProjectID = dummyData.projectID;
+        row.UserID = dummyData.researcherID;
         row.NumberOfClasses = this.projectClasses.length;
         row.NumberOfImages = this.items.length;
         row.NumberOfCameraTraps = this.projectCameraTraps.length;
@@ -250,12 +254,10 @@ export class ImageThumbnailsPageComponent implements OnInit {
         row.Flash = image.metadataValues[3];
         row.CameraMake = image.metadataValues[4];
         row.CameraModel = image.metadataValues[5];
-        row.DateTime = image.metadataValues[6];
+        row.DateTime = (moment(image.metadataValues[6])).format('DD-MM-YYYY HH:mm:ss a');
         row.CameraTrapName = image.metadataValues[7];
         row.Deployment = image.metadataValues[8];
         row.NightImage = image.metadataValues[9];
-        // TODO: add image level classification
-        row.ImageClassification = "";
       }
 
       if (i < this.projectCameraTraps.length) {
@@ -266,6 +268,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
       if (i < bboxes.length) {
         row.BoundingBoxID = bboxes[i].id;
+        row.BBoxImageID = bboxes[i].imgId;
         row.BBoxX = bboxes[i].xVal;
         row.BBoxY = bboxes[i].yVal;
         row.BBoxWidth = bboxes[i].width;
@@ -308,6 +311,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
           filteredBoxes.push(currBoxes[j]);
         } else {
           // TODO: this request should also add authentication
+          // TODO: this should use data from back end not dummydata 
           let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(dummyData.researcherID, dummyData.authToken, dummyData.projectID, currBoxes[j].id);
 
           this.server.deleteBoundingBox(deleteBBoxRequest).pipe(catchError(this.server.handleError('deleteBBoxRequest'))).subscribe((response: DeleteBBoxResponse) => {
@@ -361,6 +365,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     this.selectBox({ id: this.newBBLookup.id, className: className }, false);
 
     // TODO: this request should also add authentication
+    // TODO: this should use data from back end not from dummydata 
     let addBBoxRequest: AddBBoxRequest = new AddBBoxRequest(
       dummyData.researcherID,
       dummyData.authToken,
@@ -409,6 +414,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         }
 
         if (updateServer) {
+          // TODO: this should use data from back end not from dummydata 
           let updateBBoxRequest: UpdateBBoxRequest = new UpdateBBoxRequest(
             dummyData.researcherID,
             dummyData.authToken,
@@ -466,6 +472,7 @@ export class CustomItem implements GalleryItem {
 
 export class MetadataRow {
   ProjectID: string = undefined;
+  UserID: string = undefined;
   NumberOfClasses: number = undefined;
   Classes: string = undefined;
   NumberOfImages: number = undefined;
@@ -476,17 +483,17 @@ export class MetadataRow {
   Flash: string = undefined;
   CameraMake: string = undefined;
   CameraModel: string = undefined;
-  DateTime: Date = undefined;
+  DateTime: string = undefined;
   CameraTrapName: string = undefined;
   Deployment: string = undefined;
   NightImage: string = undefined;
-  ImageClassification: string = undefined;
   NumberOfCameraTraps: number = undefined;
   CameraTrapID: string = undefined;
   Latitude: number = undefined;
   Longitude: number = undefined;
   NumberOfBoundingBoxes: number = undefined;
   BoundingBoxID: string = undefined;
+  BBoxImageID: string = undefined;
   BBoxX: number = undefined;
   BBoxY: number = undefined;
   BBoxWidth: number = undefined;
