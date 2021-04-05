@@ -32,34 +32,40 @@ export class ServerFacade {
   //private addBBoxUrl: string = 'https://v7zrn9hnxf.execute-api.us-east-1.amazonaws.com/dev/add-bbox';
 
   //NEW API
-  private apiURL: string = 'https://hdm0cmrqyh.execute-api.us-east-2.amazonaws.com';
+  /*private apiURL: string = 'https://hdm0cmrqyh.execute-api.us-east-2.amazonaws.com';
+  private imagesUrl: string = this.apiURL + '/getImages';
+  private deleteBBoxUrl: string = this.apiURL + '/deleteBbox';
+  private updateBBoxUrl: string = this.apiURL + '/updateBbox';
+  private addBBoxUrl: string = this.apiURL + '/addBbox';*/
+
+  //NEW NEW API
+  private apiURL: string = 'https://csmo7wehhb.execute-api.us-east-2.amazonaws.com/prod';
   private imagesUrl: string = this.apiURL + '/getImages';
   private deleteBBoxUrl: string = this.apiURL + '/deleteBbox';
   private updateBBoxUrl: string = this.apiURL + '/updateBbox';
   private addBBoxUrl: string = this.apiURL + '/addBbox';
+  private getProjectDataUrl: string = this.apiURL + '/getProjectData';
+  private getCameraTrapsUrl: string = this.apiURL + '/getCameraTraps';
+
+
+
   //declare auth header for use and assignment with each of the api paths
   private requestHeader = null;
 
-  /*public getImagesWithData(
-    imageQueryRequest: ImageQueryRequest
-  ): Observable<ImageQueryResponse> {
-    return this.http.post<ImageQueryResponse>(this.imagesUrl, imageQueryRequest);
-  }*/
   public getImagesWithData(
     imageQueryRequest: ImageQueryRequest
   ): Observable<HttpEvent<ImageQueryResponse>> {
-    //UPDATE THE VARIABLE NAME ONCE SET UP AUTHORIZER ON PATHS
     const headerOptions = {
       'Authorization': this.auth.getIDToken()
     }
-    console.log("ID Token in header\n");
-    console.log(headerOptions);
+    //console.log("ID Token in header\n");
+    //console.log(headerOptions);
     
     this.requestHeader = {                                                                                                                                                                                 
       headers: new HttpHeaders(headerOptions), 
     };
-    console.log("Request header object\n");
-    console.log(this.requestHeader);
+    //console.log("Request header object\n");
+    //console.log(this.requestHeader);
     //return this.http.post<ImageQueryResponse>(this.imagesUrl, imageQueryRequest);
     //with auth header
     return this.http.post<ImageQueryResponse>(this.imagesUrl, imageQueryRequest, this.requestHeader);
@@ -84,7 +90,6 @@ export class ServerFacade {
         router.navigate([`/search`]);
       }
     }, (err) => {
-      //this.emailVerificationMessage = true;
       //console.log("Error with data: " + err + "\n");
       //console.log(err);
       alert("Error while logging in, please check your username/email and password and try again\n");
@@ -106,14 +111,14 @@ export class ServerFacade {
     const headerOptions = {
       'Authorization': this.auth.getIDToken()
     }
-    console.log("ID Token in header\n");
-    console.log(headerOptions);
+    //console.log("ID Token in header\n");
+    //console.log(headerOptions);
     
     this.requestHeader = {                                                                                                                                                                                 
       headers: new HttpHeaders(headerOptions), 
     };
-    console.log("Request header object\n");
-    console.log(this.requestHeader);
+    //console.log("Request header object\n");
+    //console.log(this.requestHeader);
 
     //return this.http.post<DeleteBBoxResponse>(this.deleteBBoxUrl, deleteBBoxRequest);
     return this.http.post<DeleteBBoxResponse>(this.deleteBBoxUrl, deleteBBoxRequest, this.requestHeader);
@@ -124,14 +129,14 @@ export class ServerFacade {
     const headerOptions = {
       'Authorization': this.auth.getIDToken()
     }
-    console.log("ID Token in header\n");
-    console.log(headerOptions);
+    //console.log("ID Token in header\n");
+    //console.log(headerOptions);
     
     this.requestHeader = {                                                                                                                                                                                 
       headers: new HttpHeaders(headerOptions), 
     };
-    console.log("Request header object\n");
-    console.log(this.requestHeader);
+    //console.log("Request header object\n");
+    //console.log(this.requestHeader);
 
     //return this.http.post<UpdateBBoxResponse>(this.updateBBoxUrl, updateBBoxRequest);
     return this.http.post<UpdateBBoxResponse>(this.updateBBoxUrl, updateBBoxRequest, this.requestHeader);
@@ -142,14 +147,14 @@ export class ServerFacade {
     const headerOptions = {
       'Authorization': this.auth.getIDToken()
     }
-    console.log("ID Token in header\n");
-    console.log(headerOptions);
+    //console.log("ID Token in header\n");
+    //console.log(headerOptions);
     
     this.requestHeader = {                                                                                                                                                                                 
       headers: new HttpHeaders(headerOptions), 
     };
-    console.log("Request header object\n");
-    console.log(this.requestHeader);
+    //console.log("Request header object\n");
+    //console.log(this.requestHeader);
 
     //return this.http.post<AddBBoxResponse>(this.addBBoxUrl, addBBoxRequest);
     return this.http.post<AddBBoxResponse>(this.addBBoxUrl, addBBoxRequest, this.requestHeader);

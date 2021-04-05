@@ -93,11 +93,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
 
     var username = this.auth.getUserName();
-    var test = "UserID"
     const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
-      test, //username goes here
-      //dummyData.authToken, //keep? 
-      dummyData.projectID, //backend has been set up to retrieve this
+      username,
+      dummyData.projectID,
       minDate,
       maxDate,
       null,
