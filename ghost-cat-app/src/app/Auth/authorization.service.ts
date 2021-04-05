@@ -49,11 +49,11 @@ export class AuthorizationService {
           //console.log("Just got jwt token\n");
           localStorage.setItem('accessToken', JSON.stringify({ token: accessToken }));
           localStorage.setItem('idToken', JSON.stringify({ token: idToken }));
-          console.log("Just stored jwt token in local storage\n");
-          console.log("Access Token:\n");
-          console.log(JSON.stringify({ token: accessToken }));
-          console.log("ID Token:\n");
-          console.log(JSON.stringify({ token: idToken }));
+          //console.log("Just stored jwt token in local storage\n");
+          //console.log("Access Token:\n");
+          //console.log(JSON.stringify({ token: accessToken }));
+          //console.log("ID Token:\n");
+          //console.log(JSON.stringify({ token: idToken }));
           observer.next(result);
           observer.complete();
         },
@@ -122,8 +122,8 @@ export class AuthorizationService {
   getIDToken() {
     //get idToken for accessing APIs
     var tempTokenObj = JSON.parse(localStorage.getItem('idToken'));
-    console.log("Stripped token is\n");
-    console.log(tempTokenObj.token);
+    //console.log("Stripped token is\n");
+    //console.log(tempTokenObj.token);
     return tempTokenObj.token;
   }
 
