@@ -32,6 +32,7 @@ export class SearchPageComponent implements OnInit {
     this.searchByCamera = false;
     this.searchByDate = false;
     this.cameraTrapsSelected = [];
+    // TODO: get classes and camera trap information from database
     this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
     this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';

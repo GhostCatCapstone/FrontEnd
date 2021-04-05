@@ -11,7 +11,6 @@ import { BoundingBoxModel } from 'src/app/Model/BoundingBoxModel';
 import { COLORS } from 'src/app/Model/Colors';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ImageDetailsComponent } from '../image-details/image-details.component';
-import { Meta } from '@angular/platform-browser';
 import * as uuid from 'uuid';
 import { Shape } from 'src/app/Model/Shape';
 import { DeleteBBoxRequest } from 'src/app/Model/DeleteBBoxRequest';
@@ -22,6 +21,8 @@ import { UpdateBBoxRequest } from 'src/app/Model/UpdateBBoxRequest';
 import { UpdateBBoxResponse } from 'src/app/Model/UpdateBBoxResponse';
 import { AuthorizationService } from "../../Auth/authorization.service";
 import { CognitoUser } from 'amazon-cognito-identity-js';
+import { CameraLocation } from 'src/app/Model/CameraLocation';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-image-thumbnails-page',
@@ -30,12 +31,21 @@ import { CognitoUser } from 'amazon-cognito-identity-js';
 })
 export class ImageThumbnailsPageComponent implements OnInit {
   items: GalleryItem[];
-  metaData: MetaData[];
 
   public currIndex: number = 0;
   public selectedBox: BoundingBoxModel;
   public newBBLookup = { id: "", src: "", imgId: "" };
   private drawnShape: Shape = null;
+
+  // TODO: get classes and camera trap information from database
+  private projectClasses = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
+  private projectCameraTraps = [
+    new CameraLocation('site002', 40.77956, -110.37389),
+    new CameraLocation('site004', 40.77956, -110.47389),
+    new CameraLocation('site005', 40.77956, -110.57389),
+    new CameraLocation('site006', 40.77956, -110.67389),
+    new CameraLocation('site008', 40.77956, -110.77389),
+  ];
 
   private get imageDetailsComponent() {
     return this.imageDetailsComponentList.find(component => component.src == this.items[this.currIndex]["data"]["src"]);
@@ -91,7 +101,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
       }
     }
 
-
     var username = this.auth.getUserName();
     const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
       username,
@@ -107,53 +116,41 @@ export class ImageThumbnailsPageComponent implements OnInit {
       .getImagesWithData(imageQueryRequest)
       .pipe(catchError(this.server.handleError('getImagesWithData')))
       .subscribe((response: ImageQueryResponse) => {
-        this.items = response.images.map(
-          (image) =>
-            new CustomItem({
-              src: image.imgLink,
-              thumb: image.imgLink,
-              classLabels: this.getClassLabels(image),
-              metadataLabels: [
-                'Image Width',
-                'Image Height',
-                'Flash',
-                'Make',
-                'Model',
-                'Date',
-                'Camera Trap',
-                'Deployment',
-                'Night Image',
-              ],
-              metadataValues: [
-                image.imgWidth,
-                image.imgHeight,
-                image.flash,
-                image.make,
-                image.model,
-                new Date(image.date),
-                image.cameraTrap,
-                image.deployment,
-                image.night_im,
-              ],
-              boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
-            })
-        );
-
         if (response.success && response.images.length) {
-          this.metaData = response.images.map(
+          this.items = response.images.map(
             (image) =>
-              new MetaData(
-                String(image.deployment),
-                Number(image.imgWidth),
-                Number(image.imgHeight),
-                String(image.flash),
-                String(image.make),
-                String(image.model),
-                new Date(image.date),
-                String(image.cameraTrap),
-                String(image.night_im),
-                String(image.id))
+              new CustomItem({
+                src: image.imgLink,
+                thumb: image.imgLink,
+                classLabels: this.projectClasses,
+                metadataLabels: [
+                  'Image ID',
+                  'Image Width',
+                  'Image Height',
+                  'Flash',
+                  'Make',
+                  'Model',
+                  'Date',
+                  'Camera Trap',
+                  'Deployment',
+                  'Night Image',
+                ],
+                metadataValues: [
+                  image.id,
+                  image.imgWidth,
+                  image.imgHeight,
+                  image.flash,
+                  image.make,
+                  image.model,
+                  new Date(image.date),
+                  image.cameraTrap,
+                  image.deployment,
+                  image.night_im,
+                ],
+                boundingBoxes: this.initializeBoundingBoxes(image.boundingBoxes),
+              })
           );
+
         } else if (response.success) {
           // no images matched the criteria so we keep it empty
           alert('No images matched your search criteria. Please try again');
@@ -171,12 +168,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
           console.log('ERROR with image data request:', response.errorMsg);
         }
       });
-  }
-
-  private getClassLabels(image): Array<string> {
-    var classes = [].concat.apply([], image.boundingBoxes.map((bb) => Object.keys(<any>bb.classes)));
-    classes = classes.filter((v, i, a) => a.indexOf(v) === i);
-    return classes;
   }
 
   @ViewChild('galleryID') galleryRef: GalleryRef;
@@ -226,8 +217,80 @@ export class ImageThumbnailsPageComponent implements OnInit {
   }
 
   downloadCsv(): void {
-    let curDate = new Date().toLocaleDateString();
-    CsvDataService.exportToCsv("metadata-" + curDate + ".csv", this.metaData);
+    let curDate = (moment(new Date())).format('DD-MM-YYYY HH:mm:ss a');
+    let rows = this.configureMetadataRows();
+    CsvDataService.exportToCsv(curDate + "-metadata.csv", rows);
+  }
+
+  private configureMetadataRows() {
+    let metadata = [];
+
+    let bboxes = this.getAllBBoxes();
+    let max = Math.max(this.projectClasses.length, this.items.length, this.projectCameraTraps.length, bboxes.length);
+
+    for (let i = 0; i < max; ++i) {
+      let row = new MetadataRow();
+      if (i == 0) {
+        // TODO: this should use data from back end not from dummydata 
+        row.ProjectID = dummyData.projectID;
+        row.UserID = dummyData.researcherID;
+        row.NumberOfClasses = this.projectClasses.length;
+        row.NumberOfImages = this.items.length;
+        row.NumberOfCameraTraps = this.projectCameraTraps.length;
+        row.NumberOfBoundingBoxes = bboxes.length;
+      }
+
+      if (i < this.projectClasses.length) {
+        row.Classes = this.projectClasses[i];
+      }
+
+      if (i < this.items.length) {
+        let image = this.items[i].data;
+
+        row.ImageID = image.metadataValues[0];
+        row.ImageLink = image.src;
+        row.ImageWidth = image.metadataValues[1];
+        row.ImageHeight = image.metadataValues[2];
+        row.Flash = image.metadataValues[3];
+        row.CameraMake = image.metadataValues[4];
+        row.CameraModel = image.metadataValues[5];
+        row.DateTime = (moment(image.metadataValues[6])).format('DD-MM-YYYY HH:mm:ss a');
+        row.CameraTrapName = image.metadataValues[7];
+        row.Deployment = image.metadataValues[8];
+        row.NightImage = image.metadataValues[9];
+      }
+
+      if (i < this.projectCameraTraps.length) {
+        row.CameraTrapID = this.projectCameraTraps[i].label;
+        row.Latitude = this.projectCameraTraps[i].latitude;
+        row.Longitude = this.projectCameraTraps[i].longitude;
+      }
+
+      if (i < bboxes.length) {
+        row.BoundingBoxID = bboxes[i].id;
+        row.BBoxImageID = bboxes[i].imgId;
+        row.BBoxX = bboxes[i].xVal;
+        row.BBoxY = bboxes[i].yVal;
+        row.BBoxWidth = bboxes[i].width;
+        row.BBoxHeight = bboxes[i].height;
+        for (let j = 0; j < bboxes[i].classes.length; ++j) {
+          let key = "Class" + (j + 1).toString();
+          row[key] = bboxes[i].classes[j].classValue;
+        }
+      }
+
+      metadata.push(row);
+    }
+
+    return metadata;
+  }
+
+  private getAllBBoxes() {
+    let boxes = [];
+    for (let i = 0; i < this.items.length; ++i) {
+      boxes = boxes.concat(this.items[i].data.boundingBoxes);
+    }
+    return boxes;
   }
 
   public async logout(): Promise<void> {
@@ -254,6 +317,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
           filteredBoxes.push(currBoxes[j]);
         } else {
           // TODO: this request should also add authentication
+          // TODO: this should use data from back end not dummydata 
           let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(dummyData.researcherID, dummyData.authToken, dummyData.projectID, currBoxes[j].id);
 
           this.server.deleteBoundingBox(deleteBBoxRequest).pipe(catchError(this.server.handleError('deleteBBoxRequest'))).subscribe((response: DeleteBBoxResponse) => {
@@ -307,6 +371,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     this.selectBox({ id: this.newBBLookup.id, className: className }, false);
 
     // TODO: this request should also add authentication
+    // TODO: this should use data from back end not from dummydata 
     let addBBoxRequest: AddBBoxRequest = new AddBBoxRequest(
       dummyData.researcherID,
       dummyData.authToken,
@@ -355,6 +420,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         }
 
         if (updateServer) {
+          // TODO: this should use data from back end not from dummydata 
           let updateBBoxRequest: UpdateBBoxRequest = new UpdateBBoxRequest(
             dummyData.researcherID,
             dummyData.authToken,
@@ -410,49 +476,44 @@ export class CustomItem implements GalleryItem {
   }
 }
 
-export class MetaData {
-  ID: string;
-  ExifImageWidth: number;
-  ExifImageHeight: number;
-  Flash: string;
-  Make: string;
-  Model: string;
-  DateTime: Date;
-  CameraTrapName: string;
-  deployment: string;
-  night_im: string;
-
-  constructor(
-    deployment: string,
-    ExifImageWidth: number,
-    ExifImageHeight: number,
-    Flash: string,
-    Make: string,
-    Model: string,
-    DateTime: Date,
-    CameraTrapName: string,
-    night_im: string,
-    ID: string) {
-    this.ID = ID;
-    this.ExifImageWidth = ExifImageWidth;
-    this.ExifImageHeight = ExifImageHeight;
-    this.Flash = Flash;
-    this.Make = Make;
-    this.Model = Model;
-    this.DateTime = DateTime;
-    this.CameraTrapName = CameraTrapName;
-    this.deployment = deployment;
-    this.night_im = night_im;
-  }
+export class MetadataRow {
+  ProjectID: string = undefined;
+  UserID: string = undefined;
+  NumberOfClasses: number = undefined;
+  Classes: string = undefined;
+  NumberOfImages: number = undefined;
+  ImageID: string = undefined;
+  ImageLink: string = undefined;
+  ImageWidth: number = undefined;
+  ImageHeight: number = undefined;
+  Flash: string = undefined;
+  CameraMake: string = undefined;
+  CameraModel: string = undefined;
+  DateTime: string = undefined;
+  CameraTrapName: string = undefined;
+  Deployment: string = undefined;
+  NightImage: string = undefined;
+  NumberOfCameraTraps: number = undefined;
+  CameraTrapID: string = undefined;
+  Latitude: number = undefined;
+  Longitude: number = undefined;
+  NumberOfBoundingBoxes: number = undefined;
+  BoundingBoxID: string = undefined;
+  BBoxImageID: string = undefined;
+  BBoxX: number = undefined;
+  BBoxY: number = undefined;
+  BBoxWidth: number = undefined;
+  BBoxHeight: number = undefined;
 }
 
 export class CsvDataService {
-  static exportToCsv(filename: string, rows: object[]) {
-    if (!rows || !rows.length) {
+  static exportToCsv(filename: string, rows: MetadataRow[]) {
+    if (!rows || !rows.length || rows.length <= 0) {
       return;
     }
     const separator = ',';
-    const keys = Object.keys(rows[0]);
+    let keys = Object.keys(rows[0]);
+
     const csvContent =
       keys.join(separator) +
       '\n' +
