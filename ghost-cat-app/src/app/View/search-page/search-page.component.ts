@@ -29,9 +29,7 @@ export class SearchPageComponent implements OnInit {
   public secondDate: Date;
   public classes: string[];
   public cameraTraps: string[];
-  public selectedView: string;
   public cameraLocations: CameraLocation[];
-  public temp: string[];
   public projects: string[];
   public selectedProject: string;
   private allProjectData: ProjectData[];
@@ -42,7 +40,6 @@ export class SearchPageComponent implements OnInit {
     this.searchByCamera = false;
     this.searchByDate = false;
     this.cameraTrapsSelected = [];
-    this.selectedView = 'thumbnails';
 
     var username = this.auth.getUserName();
     const getProjectDataRequest: GetProjectDataRequest = new GetProjectDataRequest(
@@ -84,7 +81,7 @@ export class SearchPageComponent implements OnInit {
       alert("Please select a Project to search from");
     }
 
-    this.router.navigate([this.selectedView], {
+    this.router.navigate(['thumbnails'], {
       state: {
         searchParameters: {
           project: this.selectedProject,
