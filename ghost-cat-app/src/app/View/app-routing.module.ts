@@ -13,12 +13,14 @@ import { AuthGuardService as AuthGuard } from '../Auth/auth-guard.service';
 import { PasswordCodeResetComponent } from './password-code-reset/password-code-reset.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  //{ path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', component: GhostCatLoginComponent },
   { path: 'thumbnails', component: ImageThumbnailsPageComponent, canActivate: [AuthGuard] },
   { path: 'map', component: MapViewPageComponent, canActivate: [AuthGuard] },
   { path: 'search', component: SearchPageComponent, canActivate: [AuthGuard] },
   { path: 'forgotpassword', component: ForgotPasswordComponent },
-  { path: 'login', component: GhostCatLoginComponent },
+  //{ path: 'login', component: GhostCatLoginComponent },
+  { path: 'login', redirectTo: '', pathMatch: 'full' },
   //{ path: 'settings', component: AccountSettingsComponent, canActivate: [AuthGuard] },
   { path: 'reset', component: PasswordResetComponent },
   { path: 'codeReset', component: PasswordCodeResetComponent },
