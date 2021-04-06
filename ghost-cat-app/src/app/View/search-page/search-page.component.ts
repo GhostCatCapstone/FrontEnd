@@ -30,6 +30,7 @@ export class SearchPageComponent implements OnInit {
   public cameraLocations: CameraLocation[];
   public temp: string[];
   public projects: string[];
+  public selectedProject: string;
 
   ngOnInit(): void {
     //console.log("On search page\n");
@@ -64,7 +65,6 @@ export class SearchPageComponent implements OnInit {
       })
   }
 
-
   enterSearch(): void {
     const confidenceLevel: number = this.searchByAnimal
       ? parseInt(
@@ -75,7 +75,7 @@ export class SearchPageComponent implements OnInit {
     this.router.navigate([this.selectedView], {
       state: {
         searchParameters: {
-          project : this.projects,
+          project : this.selectedProject,
           searchByAnimal: this.searchByAnimal,
           animalType: this.classChoice,
           confidenceLevel: confidenceLevel,
@@ -89,13 +89,6 @@ export class SearchPageComponent implements OnInit {
       },
     });
   }
-
-  
-    
-
-
-
-
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {

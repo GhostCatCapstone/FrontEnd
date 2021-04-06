@@ -16,7 +16,7 @@
   <div>
     <mat-form-field class="marginLeft">
       <mat-label>Select a Project</mat-label>
-      <mat-select [(value)]="projectChoice" [required]="true">
+      <mat-select [(value)]="selectedProject" [required]="true">
         <mat-option *ngFor="let project of projects" [value]="project">
           {{ project }}
         </mat-option>
