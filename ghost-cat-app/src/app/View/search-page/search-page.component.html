@@ -3,12 +3,13 @@
   <base href="/" />
   <link href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" rel="stylesheet" />
 </head>
+
 <body>
-    <div class="topnav" >
-      <span title="Logout" class="icon" (click)="logout()">
-        <i class="fas fa-door-open" alt="Logout"></i>
-      </span>
-    </div>
+  <div class="topnav">
+    <span title="Logout" class="icon" (click)="logout()">
+      <i class="fas fa-door-open" alt="Logout"></i>
+    </span>
+  </div>
   <div>
     <h1>New Search</h1>
     <h3>Standard Filters</h3>
@@ -16,7 +17,7 @@
   <div>
     <mat-form-field class="marginLeft">
       <mat-label>Select a Project</mat-label>
-      <mat-select [(value)]="selectedProject" [required]="true">
+      <mat-select [(value)]="selectedProject" (selectionChange)="projectChosen($event.value)" [required]="true">
         <mat-option *ngFor="let project of projects" [value]="project">
           {{ project }}
         </mat-option>
@@ -24,9 +25,7 @@
     </mat-form-field>
   </div>
   <div>
-    <mat-checkbox id="Animal" [(ngModel)]="searchByAnimal"
-      >Search by Animal</mat-checkbox
-    >
+    <mat-checkbox id="Animal" [(ngModel)]="searchByAnimal">Search by Animal</mat-checkbox>
     <mat-form-field *ngIf="searchByAnimal" class="marginLeft">
       <mat-label>Select a Class</mat-label>
       <mat-select [(value)]="classChoice" [required]="true">
@@ -41,9 +40,7 @@
     </mat-form-field>
   </div>
   <div>
-    <mat-checkbox id="Camera" [(ngModel)]="searchByCamera"
-      >Search by Camera</mat-checkbox
-    >
+    <mat-checkbox id="Camera" [(ngModel)]="searchByCamera">Search by Camera</mat-checkbox>
     <mat-form-field *ngIf="searchByCamera" class="marginLeft">
       <mat-label>Camera Trap</mat-label>
       <mat-select [(value)]="cameraTrapsSelected" [required]="true" multiple>
@@ -52,26 +49,15 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <app-google-maps-wrapper
-      *ngIf="searchByCamera"
-      style="width: 100%; height: 400px"
-      [latitude]="40.77956"
-      [longitude]="-110.37389"
-      [cameraLocations]="cameraLocations"
-      (cameraSiteClicked)="updateCameraSite($event)"
-    ></app-google-maps-wrapper>
+    <app-google-maps-wrapper *ngIf="searchByCamera" style="width: 100%; height: 400px" [latitude]="40.77956"
+      [longitude]="-110.37389" [cameraLocations]="cameraLocations" (cameraSiteClicked)="updateCameraSite($event)">
+    </app-google-maps-wrapper>
   </div>
   <div>
-    <mat-checkbox id="Date" [(ngModel)]="searchByDate"
-      >Search by Date</mat-checkbox
-    >
+    <mat-checkbox id="Date" [(ngModel)]="searchByDate">Search by Date</mat-checkbox>
     <mat-form-field *ngIf="searchByDate" class="marginLeft">
       <mat-label>Enter Date Criteria</mat-label>
-      <mat-select
-        [(value)]="dateType"
-        [disabled]="!searchByDate"
-        [required]="searchByDate"
-      >
+      <mat-select [(value)]="dateType" [disabled]="!searchByDate" [required]="searchByDate">
         <mat-option value="between">between</mat-option>
         <mat-option value="after">after</mat-option>
         <mat-option value="before">before</mat-option>
@@ -79,21 +65,13 @@
     </mat-form-field>
     <mat-form-field *ngIf="searchByDate" class="marginLeft">
       <mat-label>Choose a date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        (dateChange)="firstDate = $event.value"
-      />
+      <input matInput [matDatepicker]="picker" (dateChange)="firstDate = $event.value" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <mat-form-field *ngIf="dateType == 'between'" class="marginLeft">
       <mat-label>Choose a date</mat-label>
-      <input
-        matInput
-        [matDatepicker]="picker"
-        (dateChange)="secondDate = $event.value"
-      />
+      <input matInput [matDatepicker]="picker" (dateChange)="secondDate = $event.value" />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
@@ -102,17 +80,9 @@
     <h3>View Options</h3>
   </div>
   <div>
-    <mat-radio-group
-      class="radio-button-group"
-      aria-label="Select preferred view option:"
-      [(ngModel)]="selectedView"
-    >
-      <mat-radio-button class="radio-button" value="map"
-        >Map View</mat-radio-button
-      >
-      <mat-radio-button class="radio-button" value="thumbnails"
-        >Image View</mat-radio-button
-      >
+    <mat-radio-group class="radio-button-group" aria-label="Select preferred view option:" [(ngModel)]="selectedView">
+      <mat-radio-button class="radio-button" value="map">Map View</mat-radio-button>
+      <mat-radio-button class="radio-button" value="thumbnails">Image View</mat-radio-button>
     </mat-radio-group>
   </div>
   <div>

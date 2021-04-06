@@ -6,6 +6,8 @@ import { GetProjectDataResponse } from 'src/app/Model/GetProjectDataResponse';
 import { ServerFacade } from 'src/app/Proxy/ServerFacade';
 import { AuthorizationService } from "../../Auth/authorization.service";
 import { catchError } from 'rxjs/operators'
+import { GetCameraTrapsRequest } from 'src/app/Model/GetCameraTrapRequest';
+import { GetCameraTrapsResponse } from 'src/app/Model/GetCameraTrapResponse';
 
 @Component({
   selector: 'app-search-page',
@@ -38,17 +40,7 @@ export class SearchPageComponent implements OnInit {
     this.searchByCamera = false;
     this.searchByDate = false;
     this.cameraTrapsSelected = [];
-    // TODO: get classes and camera trap information from database
-    this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
-    this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';
-    this.cameraLocations = [
-      new CameraLocation('site002', 40.77956, -110.37389),
-      new CameraLocation('site004', 40.77956, -110.47389),
-      new CameraLocation('site005', 40.77956, -110.57389),
-      new CameraLocation('site006', 40.77956, -110.67389),
-      new CameraLocation('site008', 40.77956, -110.77389),
-    ];
 
     var username = this.auth.getUserName();
     const getProjectDataRequest: GetProjectDataRequest = new GetProjectDataRequest(
@@ -62,7 +54,19 @@ export class SearchPageComponent implements OnInit {
         if (response.success && response.projects.length) {
           this.projects = response.projects.map((p) => p.projectID);
         }
-      })
+      });
+  }
+
+  projectChosen(selectedProject: any) {
+    var username = this.auth.getUserName();
+    const getCameraTrapsRequest: GetCameraTrapsRequest = new GetCameraTrapsRequest(selectedProject, username);
+
+    this.server.getCameraTraps(getCameraTrapsRequest).pipe(catchError(this.server.handleError('getCameraTraps'))).subscribe((response: GetCameraTrapsResponse) => {
+      if (response.success && response.cameraTraps.length) {
+        this.cameraTraps = response.cameraTraps.map((trap) => trap.cameraTrapID);
+        this.cameraLocations = response.cameraTraps.map((trap) => new CameraLocation(trap.cameraTrapID, trap.lat, trap.lng));
+      }
+    })
   }
 
   enterSearch(): void {
@@ -75,17 +79,18 @@ export class SearchPageComponent implements OnInit {
     this.router.navigate([this.selectedView], {
       state: {
         searchParameters: {
-          project : this.selectedProject,
+          project: this.selectedProject,
           searchByAnimal: this.searchByAnimal,
           animalType: this.classChoice,
           confidenceLevel: confidenceLevel,
           searchByCamera: this.searchByCamera,
-          cameraTrap: this.cameraTrapsSelected,
+          cameraTraps: this.cameraTrapsSelected,
           searchByDate: this.searchByDate,
           dateType: this.dateType,
           firstDate: this.firstDate?.getTime(),
           secondDate: this.secondDate?.getTime(),
         },
+        classes: this.classes,
       },
     });
   }
