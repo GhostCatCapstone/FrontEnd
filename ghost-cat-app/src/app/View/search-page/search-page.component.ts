@@ -76,6 +76,10 @@ export class SearchPageComponent implements OnInit {
       ) / 100
       : 0;
 
+      if (this.selectedProject == null) {
+        alert("Please select a Project to search from");
+      }
+
     this.router.navigate([this.selectedView], {
       state: {
         searchParameters: {
