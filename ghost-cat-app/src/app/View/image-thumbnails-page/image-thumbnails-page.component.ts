@@ -217,7 +217,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
   }
 
   downloadCsv(): void {
-    let curDate = (moment(new Date())).format('DD-MM-YYYY HH:mm:ss a');
+    let curDate = (moment(new Date())).format('MM-DD-YYYY');
     let rows = this.configureMetadataRows();
     CsvDataService.exportToCsv(curDate + "-metadata.csv", rows);
   }
@@ -254,7 +254,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         row.Flash = image.metadataValues[3];
         row.CameraMake = image.metadataValues[4];
         row.CameraModel = image.metadataValues[5];
-        row.DateTime = (moment(image.metadataValues[6])).format('DD-MM-YYYY HH:mm:ss a');
+        row.DateTime = (moment(image.metadataValues[6])).format('MM-DD-YYYY HH:mm:ss');
         row.CameraTrapName = image.metadataValues[7];
         row.Deployment = image.metadataValues[8];
         row.NightImage = image.metadataValues[9];
