@@ -16,6 +16,10 @@ import { UpdateBBoxResponse } from '../Model/UpdateBBoxResponse';
 import { AddBBoxRequest } from '../Model/AddBBoxRequest';
 import { AddBBoxResponse } from '../Model/AddBBoxResponse';
 import { AuthorizationService } from "../Auth/authorization.service";
+import { GetProjectDataRequest } from '../Model/GetProjectDataRequest';
+import { GetProjectDataResponse } from '../Model/GetProjectDataResponse';
+import { GetCameraTrapsRequest } from '../Model/GetCameraTrapRequest';
+import { GetCameraTrapsResponse } from '../Model/GetCameraTrapResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -43,13 +47,37 @@ export class ServerFacade {
     }
     //console.log("ID Token in header\n");
     //console.log(headerOptions);
-    
-    this.requestHeader = {                                                                                                                                                                                 
-      headers: new HttpHeaders(headerOptions), 
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
     return this.http.post<ImageQueryResponse>(this.imagesUrl, imageQueryRequest, this.requestHeader);
+  }
+
+  public getProjectData(getProjectDataRequest: GetProjectDataRequest): Observable<HttpEvent<GetProjectDataResponse>> {
+    const headerOptions = {
+      'Authorization': this.auth.getIDToken(),
+    };
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
+    };
+
+    return this.http.post<GetProjectDataResponse>(this.getProjectDataUrl, getProjectDataRequest, this.requestHeader);
+  }
+
+  public getCameraTraps(getCameraTrapsRequest: GetCameraTrapsRequest): Observable<HttpEvent<GetCameraTrapsResponse>> {
+    const headerOptions = {
+      'Authorization': this.auth.getIDToken(),
+    };
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
+    };
+
+    return this.http.post<GetCameraTrapsResponse>(this.getCameraTrapsUrl, getCameraTrapsRequest, this.requestHeader); 
   }
 
   public async login(
@@ -82,9 +110,9 @@ export class ServerFacade {
     }
     //console.log("ID Token in header\n");
     //console.log(headerOptions);
-    
-    this.requestHeader = {                                                                                                                                                                                 
-      headers: new HttpHeaders(headerOptions), 
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
@@ -98,9 +126,9 @@ export class ServerFacade {
     }
     //console.log("ID Token in header\n");
     //console.log(headerOptions);
-    
-    this.requestHeader = {                                                                                                                                                                                 
-      headers: new HttpHeaders(headerOptions), 
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
@@ -114,9 +142,9 @@ export class ServerFacade {
     }
     //console.log("ID Token in header\n");
     //console.log(headerOptions);
-    
-    this.requestHeader = {                                                                                                                                                                                 
-      headers: new HttpHeaders(headerOptions), 
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);

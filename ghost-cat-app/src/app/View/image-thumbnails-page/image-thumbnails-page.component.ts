@@ -37,15 +37,8 @@ export class ImageThumbnailsPageComponent implements OnInit {
   public newBBLookup = { id: "", src: "", imgId: "" };
   private drawnShape: Shape = null;
 
-  // TODO: get classes and camera trap information from database
-  private projectClasses = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
-  private projectCameraTraps = [
-    new CameraLocation('site002', 40.77956, -110.37389),
-    new CameraLocation('site004', 40.77956, -110.47389),
-    new CameraLocation('site005', 40.77956, -110.57389),
-    new CameraLocation('site006', 40.77956, -110.67389),
-    new CameraLocation('site008', 40.77956, -110.77389),
-  ];
+  private projectClasses = history.state.searchParameters.classes;
+  private projectCameraTraps = history.state.searchParameters.cameraTraps;
 
   private get imageDetailsComponent() {
     return this.imageDetailsComponentList.find(component => component.src == this.items[this.currIndex]["data"]["src"]);
@@ -87,7 +80,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     }
 
     if (history.state.searchParameters.searchByCamera) {
-      cameraTraps = Object.assign([], history.state.searchParameters.cameraTrap);
+      cameraTraps = Object.assign([], history.state.searchParameters.cameraTraps);
     }
 
     if (history.state.searchParameters.searchByDate) {
@@ -104,7 +97,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     var username = this.auth.getUserName();
     const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
       username,
-      dummyData.projectID,
+      history.state.searchParameters.project,
       minDate,
       maxDate,
       null,
@@ -190,7 +183,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
       let newClasses: ClassValue[] = [];
       for (let j = 0; j < keys.length; ++j) {
-        let val = (<number>values[j]) * 100;
+        let val = (<number>values[j]);
         newClasses.push(new ClassValue(keys[j], val));
       }
       boxes[i].classes = newClasses;
@@ -231,9 +224,8 @@ export class ImageThumbnailsPageComponent implements OnInit {
     for (let i = 0; i < max; ++i) {
       let row = new MetadataRow();
       if (i == 0) {
-        // TODO: this should use data from back end not from dummydata 
-        row.ProjectID = dummyData.projectID;
-        row.UserID = dummyData.researcherID;
+        row.ProjectID = history.state.searchParameters.project;
+        row.UserID = this.auth.getUserName();
         row.NumberOfClasses = this.projectClasses.length;
         row.NumberOfImages = this.items.length;
         row.NumberOfCameraTraps = this.projectCameraTraps.length;
@@ -316,9 +308,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         if (bb.find(b => b.id == currBoxes[j].id) == undefined) {
           filteredBoxes.push(currBoxes[j]);
         } else {
-          // TODO: this request should also add authentication
-          // TODO: this should use data from back end not dummydata 
-          let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(dummyData.researcherID, dummyData.authToken, dummyData.projectID, currBoxes[j].id);
+          let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(this.auth.getUserName(), history.state.searchParameters.project, currBoxes[j].id);
 
           this.server.deleteBoundingBox(deleteBBoxRequest).pipe(catchError(this.server.handleError('deleteBBoxRequest'))).subscribe((response: DeleteBBoxResponse) => {
             if (response == undefined || response == null) {
@@ -370,12 +360,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
   public selectNewBoxClass(className: string) {
     this.selectBox({ id: this.newBBLookup.id, className: className }, false);
 
-    // TODO: this request should also add authentication
-    // TODO: this should use data from back end not from dummydata 
     let addBBoxRequest: AddBBoxRequest = new AddBBoxRequest(
-      dummyData.researcherID,
-      dummyData.authToken,
-      dummyData.projectID,
+      this.auth.getUserName(),
+      history.state.searchParameters.project,
       this.newBBLookup.imgId,
       this.drawnShape.x,
       this.drawnShape.y,
@@ -420,11 +407,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
         }
 
         if (updateServer) {
-          // TODO: this should use data from back end not from dummydata 
           let updateBBoxRequest: UpdateBBoxRequest = new UpdateBBoxRequest(
-            dummyData.researcherID,
-            dummyData.authToken,
-            dummyData.projectID,
+            this.auth.getUserName(),
+            history.state.searchParameters.project,
             id,
             className
           );

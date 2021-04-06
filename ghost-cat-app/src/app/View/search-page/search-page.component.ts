@@ -1,7 +1,14 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
+import { GetProjectDataRequest } from 'src/app/Model/GetProjectDataRequest';
+import { GetProjectDataResponse } from 'src/app/Model/GetProjectDataResponse';
+import { ServerFacade } from 'src/app/Proxy/ServerFacade';
 import { AuthorizationService } from "../../Auth/authorization.service";
+import { catchError } from 'rxjs/operators'
+import { GetCameraTrapsRequest } from 'src/app/Model/GetCameraTrapRequest';
+import { GetCameraTrapsResponse } from 'src/app/Model/GetCameraTrapResponse';
+import { ProjectData } from 'src/app/Model/ProjectData';
 
 @Component({
   selector: 'app-search-page',
@@ -9,7 +16,7 @@ import { AuthorizationService } from "../../Auth/authorization.service";
   styleUrls: ['./search-page.component.css'],
 })
 export class SearchPageComponent implements OnInit {
-  constructor(private router: Router, private auth: AuthorizationService) { }
+  constructor(private router: Router, private auth: AuthorizationService, private server: ServerFacade,) { }
 
   public searchByAnimal: boolean;
   public searchByCamera: boolean;
@@ -25,6 +32,9 @@ export class SearchPageComponent implements OnInit {
   public selectedView: string;
   public cameraLocations: CameraLocation[];
   public temp: string[];
+  public projects: string[];
+  public selectedProject: string;
+  private allProjectData: ProjectData[];
 
   ngOnInit(): void {
     //console.log("On search page\n");
@@ -32,39 +42,62 @@ export class SearchPageComponent implements OnInit {
     this.searchByCamera = false;
     this.searchByDate = false;
     this.cameraTrapsSelected = [];
-    // TODO: get classes and camera trap information from database
-    this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
-    this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';
-    this.cameraLocations = [
-      new CameraLocation('site002', 40.77956, -110.37389),
-      new CameraLocation('site004', 40.77956, -110.47389),
-      new CameraLocation('site005', 40.77956, -110.57389),
-      new CameraLocation('site006', 40.77956, -110.67389),
-      new CameraLocation('site008', 40.77956, -110.77389),
-    ];
+
+    var username = this.auth.getUserName();
+    const getProjectDataRequest: GetProjectDataRequest = new GetProjectDataRequest(
+      username,
+    );
+
+    this.server
+      .getProjectData(getProjectDataRequest)
+      .pipe(catchError(this.server.handleError('getProjectData')))
+      .subscribe((response: GetProjectDataResponse) => {
+        if (response.success && response.projects.length) {
+          this.allProjectData = response.projects;
+          this.projects = response.projects.map((p) => p.projectID);
+        }
+      });
   }
 
+  projectChosen(selectedProject: any) {
+    var username = this.auth.getUserName();
+    const getCameraTrapsRequest: GetCameraTrapsRequest = new GetCameraTrapsRequest(selectedProject, username);
+
+    this.server.getCameraTraps(getCameraTrapsRequest).pipe(catchError(this.server.handleError('getCameraTraps'))).subscribe((response: GetCameraTrapsResponse) => {
+      if (response.success && response.cameraTraps.length) {
+        this.cameraTraps = response.cameraTraps.map((trap) => trap.cameraTrapID);
+        this.cameraLocations = response.cameraTraps.map((trap) => new CameraLocation(trap.cameraTrapID, trap.lat, trap.lng));
+
+        this.classes = this.allProjectData.filter((data) => data.projectID == selectedProject)[0].classes;
+      }
+    });
+  }
 
   enterSearch(): void {
     const confidenceLevel: number = this.searchByAnimal
       ? parseInt(
         (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
-      ) / 100
-      : 0;
+      ) : 0;
+
+    if (this.selectedProject == null) {
+      alert("Please select a Project to search from");
+    }
 
     this.router.navigate([this.selectedView], {
       state: {
         searchParameters: {
+          project: this.selectedProject,
           searchByAnimal: this.searchByAnimal,
           animalType: this.classChoice,
           confidenceLevel: confidenceLevel,
           searchByCamera: this.searchByCamera,
-          cameraTrap: this.cameraTrapsSelected,
+          cameraTraps: this.cameraTrapsSelected,
           searchByDate: this.searchByDate,
           dateType: this.dateType,
           firstDate: this.firstDate?.getTime(),
           secondDate: this.secondDate?.getTime(),
+          classes: this.classes,
         },
       },
     });
