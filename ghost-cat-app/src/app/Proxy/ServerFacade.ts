@@ -18,6 +18,8 @@ import { AddBBoxResponse } from '../Model/AddBBoxResponse';
 import { AuthorizationService } from "../Auth/authorization.service";
 import { GetProjectDataRequest } from '../Model/GetProjectDataRequest';
 import { GetProjectDataResponse } from '../Model/GetProjectDataResponse';
+import { GetCameraTrapsRequest } from '../Model/GetCameraTrapRequest';
+import { GetCameraTrapsResponse } from '../Model/GetCameraTrapResponse';
 
 @Injectable({
   providedIn: 'root',
@@ -64,6 +66,18 @@ export class ServerFacade {
     };
 
     return this.http.post<GetProjectDataResponse>(this.getProjectDataUrl, getProjectDataRequest, this.requestHeader);
+  }
+
+  public getCameraTraps(getCameraTrapsRequest: GetCameraTrapsRequest): Observable<HttpEvent<GetCameraTrapsResponse>> {
+    const headerOptions = {
+      'Authorization': this.auth.getIDToken(),
+    };
+
+    this.requestHeader = {
+      headers: new HttpHeaders(headerOptions),
+    };
+
+    return this.http.post<GetCameraTrapsResponse>(this.getCameraTrapsUrl, getCameraTrapsRequest, this.requestHeader); 
   }
 
   public async login(

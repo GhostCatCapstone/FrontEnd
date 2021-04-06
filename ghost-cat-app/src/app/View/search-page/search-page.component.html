@@ -14,6 +14,16 @@
     <h3>Standard Filters</h3>
   </div>
   <div>
+    <mat-form-field class="marginLeft">
+      <mat-label>Select a Project</mat-label>
+      <mat-select [(value)]="projectChoice" [required]="true">
+        <mat-option *ngFor="let project of projects" [value]="project">
+          {{ class }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div>
     <mat-checkbox id="Animal" [(ngModel)]="searchByAnimal"
       >Search by Animal</mat-checkbox
     >

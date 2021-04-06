@@ -25,6 +25,7 @@ export class SearchPageComponent implements OnInit {
   public selectedView: string;
   public cameraLocations: CameraLocation[];
   public temp: string[];
+  public project: string[];
 
   ngOnInit(): void {
     //console.log("On search page\n");
@@ -33,6 +34,7 @@ export class SearchPageComponent implements OnInit {
     this.searchByDate = false;
     this.cameraTrapsSelected = [];
     // TODO: get classes and camera trap information from database
+    this.project= ['project1', 'project2'];
     this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
     this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';
@@ -56,6 +58,7 @@ export class SearchPageComponent implements OnInit {
     this.router.navigate([this.selectedView], {
       state: {
         searchParameters: {
+          project : this.project,
           searchByAnimal: this.searchByAnimal,
           animalType: this.classChoice,
           confidenceLevel: confidenceLevel,
