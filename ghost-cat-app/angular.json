@@ -19,6 +19,15 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
+            "allowedCommonJsDependencies": [
+              "crypto-js",
+              "buffer",
+              "js-cookie",
+              "crypto-js/hmac-sha256",
+              "crypto-js/lib-typedarrays",
+              "crypto-js/enc-base64",
+              "isomorphic-unfetch"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"

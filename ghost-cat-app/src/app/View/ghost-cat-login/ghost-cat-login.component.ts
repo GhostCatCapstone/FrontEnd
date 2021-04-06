@@ -1,6 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import * as crypto from 'crypto-js';
 import { ServerFacade } from '../../Proxy/ServerFacade';
 import { LoginRequest } from '../../Model/LoginRequest';
 
@@ -15,17 +14,18 @@ export class GhostCatLoginComponent implements OnInit {
 
   constructor(private router: Router, private server: ServerFacade) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    //console.log("On log in\n"); 
+  }
 
   goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
   }
 
   public sendLoginRequest(): void {
-    const passwordHash = crypto.SHA512(this.password).toString();
     const loginRequest: LoginRequest = new LoginRequest(
       this.email,
-      passwordHash
+      this.password
     );
     this.server.login(loginRequest, this.router);
   }

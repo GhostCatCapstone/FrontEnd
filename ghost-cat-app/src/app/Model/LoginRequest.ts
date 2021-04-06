@@ -1,3 +1,3 @@
 export class LoginRequest {
-  constructor(public userID: string, public passwordHash: string) {}
+  constructor(public userID: string, public password: string) {}
 }

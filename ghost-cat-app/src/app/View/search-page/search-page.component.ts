@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
+import { AuthorizationService } from "../../Auth/authorization.service";
 
 @Component({
   selector: 'app-search-page',
@@ -8,7 +9,7 @@ import { CameraLocation } from 'src/app/Model/CameraLocation';
   styleUrls: ['./search-page.component.css'],
 })
 export class SearchPageComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: AuthorizationService) { }
 
   public searchByAnimal: boolean;
   public searchByCamera: boolean;
@@ -26,6 +27,7 @@ export class SearchPageComponent implements OnInit {
   public temp: string[];
 
   ngOnInit(): void {
+    //console.log("On search page\n");
     this.searchByAnimal = false;
     this.searchByCamera = false;
     this.searchByDate = false;
@@ -47,8 +49,8 @@ export class SearchPageComponent implements OnInit {
   enterSearch(): void {
     const confidenceLevel: number = this.searchByAnimal
       ? parseInt(
-          (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
-        ) / 100
+        (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
+      ) / 100
       : 0;
 
     this.router.navigate([this.selectedView], {
@@ -75,8 +77,14 @@ export class SearchPageComponent implements OnInit {
     }
   }
 
+  public async logout(): Promise<void> {
+    //console.log("About to call logout function\n");
+    this.auth.logout();
+    this.router.navigate([`/login`]);
+  }
+
   public updateCameraSite(cameraSite: CameraLocation): void {
-    if (this.cameraTrapsSelected.includes(cameraSite.label)){
+    if (this.cameraTrapsSelected.includes(cameraSite.label)) {
       this.cameraTrapsSelected = this.cameraTrapsSelected.filter(trap => trap != cameraSite.label);
     } else {
       this.cameraTrapsSelected = [...this.cameraTrapsSelected, cameraSite.label];

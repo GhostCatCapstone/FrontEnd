@@ -19,6 +19,8 @@ import { AddBBoxRequest } from 'src/app/Model/AddBBoxRequest';
 import { AddBBoxResponse } from 'src/app/Model/AddBBoxResponse';
 import { UpdateBBoxRequest } from 'src/app/Model/UpdateBBoxRequest';
 import { UpdateBBoxResponse } from 'src/app/Model/UpdateBBoxResponse';
+import { AuthorizationService } from "../../Auth/authorization.service";
+import { CognitoUser } from 'amazon-cognito-identity-js';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
 import * as moment from 'moment';
 
@@ -55,6 +57,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
     private server: ServerFacade,
     public cdr: ChangeDetectorRef,
     public appRef: ApplicationRef,
+    private auth: AuthorizationService,
   ) { }
 
   ngOnInit() {
@@ -98,11 +101,9 @@ export class ImageThumbnailsPageComponent implements OnInit {
       }
     }
 
-    // TODO: this request should also add authentication
-    // TODO: this should use from database instead of dummy data
+    var username = this.auth.getUserName();
     const imageQueryRequest: ImageQueryRequest = new ImageQueryRequest(
-      dummyData.researcherID,
-      dummyData.authToken,
+      username,
       dummyData.projectID,
       minDate,
       maxDate,
@@ -110,7 +111,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
       cameraTraps,
       classValueArray
     );
-
 
     this.server
       .getImagesWithData(imageQueryRequest)
@@ -291,6 +291,12 @@ export class ImageThumbnailsPageComponent implements OnInit {
       boxes = boxes.concat(this.items[i].data.boundingBoxes);
     }
     return boxes;
+  }
+
+  public async logout(): Promise<void> {
+    //console.log("About to call logout function\n");
+    this.auth.logout();
+    this.router.navigate([`/login`]);
   }
 
   @ViewChild('sidebar') sidebarComponent: SidebarComponent;

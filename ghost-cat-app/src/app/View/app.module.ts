@@ -5,7 +5,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material.module';
 import { AgmCoreModule } from '@agm/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +22,10 @@ import { MapViewPageComponent } from './map-view-page/map-view-page.component';
 import { GhostCatLoginComponent } from './ghost-cat-login/ghost-cat-login.component';
 import { ExpandableListModule } from 'angular-expandable-list';
 import { GoogleMapsWrapperComponent } from './google-maps-wrapper/google-maps-wrapper.component';
+import { AuthorizationService } from "../Auth/authorization.service";
+import { AuthGuardService as AuthGuard } from "../Auth/auth-guard.service";
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { PasswordCodeResetComponent } from './password-code-reset/password-code-reset.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,7 @@ import { GoogleMapsWrapperComponent } from './google-maps-wrapper/google-maps-wr
     InternalRegisterPageComponent,
     MapViewPageComponent,
     GoogleMapsWrapperComponent,
+    PasswordCodeResetComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +58,9 @@ import { GoogleMapsWrapperComponent } from './google-maps-wrapper/google-maps-wr
       apiKey: 'AIzaSyAZBl8XPkkHaHpd7_-lAGi9DqslF3S8l7s',
     }),
   ],
+  providers: [AuthorizationService, AuthGuard, { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
+    JwtHelperService],
   bootstrap: [AppComponent],
   entryComponents: [],
 })
-export class AppModule {}
+export class AppModule { }

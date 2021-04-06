@@ -37,7 +37,8 @@ export class InternalRegisterPageComponent implements OnInit {
 
     const passwordHash = crypto.SHA512(this.password).toString();
     const request = new RegisterRequest(this.email, passwordHash);
-    this.server
+    //Registering is no longer done this way, it's done through cognito
+    /*this.server
       .register(request)
       .pipe(catchError(this.server.handleError('register')))
       .subscribe((response: RegisterResponse) => {
@@ -45,6 +46,6 @@ export class InternalRegisterPageComponent implements OnInit {
         if (!response.success) {
           alert('Error while registering: ' + response.errorMsg);
         }
-      });
+      });*/
   }
 }
