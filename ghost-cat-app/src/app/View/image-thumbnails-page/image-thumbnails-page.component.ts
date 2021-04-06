@@ -308,7 +308,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
         if (bb.find(b => b.id == currBoxes[j].id) == undefined) {
           filteredBoxes.push(currBoxes[j]);
         } else {
-          let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(this.auth.getUserName(), dummyData.authToken, history.state.searchParameters.project, currBoxes[j].id);
+          let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(this.auth.getUserName(), history.state.searchParameters.project, currBoxes[j].id);
 
           this.server.deleteBoundingBox(deleteBBoxRequest).pipe(catchError(this.server.handleError('deleteBBoxRequest'))).subscribe((response: DeleteBBoxResponse) => {
             if (response == undefined || response == null) {
@@ -362,7 +362,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
     let addBBoxRequest: AddBBoxRequest = new AddBBoxRequest(
       this.auth.getUserName(),
-      dummyData.authToken,
       history.state.searchParameters.project,
       this.newBBLookup.imgId,
       this.drawnShape.x,
@@ -410,7 +409,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
         if (updateServer) {
           let updateBBoxRequest: UpdateBBoxRequest = new UpdateBBoxRequest(
             this.auth.getUserName(),
-            dummyData.authToken,
             history.state.searchParameters.project,
             id,
             className
