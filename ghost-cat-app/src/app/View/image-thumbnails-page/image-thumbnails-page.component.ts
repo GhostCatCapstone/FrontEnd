@@ -37,7 +37,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
   public newBBLookup = { id: "", src: "", imgId: "" };
   private drawnShape: Shape = null;
 
-  private projectClasses = history.state.classes;
+  private projectClasses = history.state.searchParameters.classes;
   private projectCameraTraps = history.state.searchParameters.cameraTraps;
 
   private get imageDetailsComponent() {

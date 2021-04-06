@@ -8,6 +8,7 @@ import { AuthorizationService } from "../../Auth/authorization.service";
 import { catchError } from 'rxjs/operators'
 import { GetCameraTrapsRequest } from 'src/app/Model/GetCameraTrapRequest';
 import { GetCameraTrapsResponse } from 'src/app/Model/GetCameraTrapResponse';
+import { ProjectData } from 'src/app/Model/ProjectData';
 
 @Component({
   selector: 'app-search-page',
@@ -33,6 +34,7 @@ export class SearchPageComponent implements OnInit {
   public temp: string[];
   public projects: string[];
   public selectedProject: string;
+  private allProjectData: ProjectData[];
 
   ngOnInit(): void {
     //console.log("On search page\n");
@@ -45,13 +47,14 @@ export class SearchPageComponent implements OnInit {
     var username = this.auth.getUserName();
     const getProjectDataRequest: GetProjectDataRequest = new GetProjectDataRequest(
       username,
-    )
+    );
 
     this.server
       .getProjectData(getProjectDataRequest)
       .pipe(catchError(this.server.handleError('getProjectData')))
       .subscribe((response: GetProjectDataResponse) => {
         if (response.success && response.projects.length) {
+          this.allProjectData = response.projects;
           this.projects = response.projects.map((p) => p.projectID);
         }
       });
@@ -65,8 +68,10 @@ export class SearchPageComponent implements OnInit {
       if (response.success && response.cameraTraps.length) {
         this.cameraTraps = response.cameraTraps.map((trap) => trap.cameraTrapID);
         this.cameraLocations = response.cameraTraps.map((trap) => new CameraLocation(trap.cameraTrapID, trap.lat, trap.lng));
+
+        this.classes = this.allProjectData.filter((data) => data.projectID == selectedProject)[0].classes;
       }
-    })
+    });
   }
 
   enterSearch(): void {
@@ -76,9 +81,9 @@ export class SearchPageComponent implements OnInit {
       ) / 100
       : 0;
 
-      if (this.selectedProject == null) {
-        alert("Please select a Project to search from");
-      }
+    if (this.selectedProject == null) {
+      alert("Please select a Project to search from");
+    }
 
     this.router.navigate([this.selectedView], {
       state: {
@@ -93,8 +98,8 @@ export class SearchPageComponent implements OnInit {
           dateType: this.dateType,
           firstDate: this.firstDate?.getTime(),
           secondDate: this.secondDate?.getTime(),
+          classes: this.classes,
         },
-        classes: this.classes,
       },
     });
   }
