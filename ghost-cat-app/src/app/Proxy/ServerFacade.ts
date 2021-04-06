@@ -23,22 +23,7 @@ import { AuthorizationService } from "../Auth/authorization.service";
 export class ServerFacade {
   constructor(private auth: AuthorizationService, private http: HttpClient) { }
 
-  // OLD APIs
-  //private imagesUrl: string = 'https://orwi9aw2x4.execute-api.us-east-1.amazonaws.com/DeployAPI/photos';
-  //private loginUrl: string = 'https://az5x52mixa.execute-api.us-east-1.amazonaws.com/dev/login';
-  //private registerUrl: string = 'https://mhpljllqvj.execute-api.us-east-1.amazonaws.com/dev/register';
-  //private deleteBBoxUrl: string = 'https://69ip0r3tvb.execute-api.us-east-1.amazonaws.com/dev/delete-bbox';
-  //private updateBBoxUrl: string = 'https://7rh1zwja1d.execute-api.us-east-1.amazonaws.com/dev/update-value';
-  //private addBBoxUrl: string = 'https://v7zrn9hnxf.execute-api.us-east-1.amazonaws.com/dev/add-bbox';
-
-  //NEW API
-  /*private apiURL: string = 'https://hdm0cmrqyh.execute-api.us-east-2.amazonaws.com';
-  private imagesUrl: string = this.apiURL + '/getImages';
-  private deleteBBoxUrl: string = this.apiURL + '/deleteBbox';
-  private updateBBoxUrl: string = this.apiURL + '/updateBbox';
-  private addBBoxUrl: string = this.apiURL + '/addBbox';*/
-
-  //NEW NEW API
+  //API
   private apiURL: string = 'https://csmo7wehhb.execute-api.us-east-2.amazonaws.com/prod';
   private imagesUrl: string = this.apiURL + '/getImages';
   private deleteBBoxUrl: string = this.apiURL + '/deleteBbox';
@@ -46,8 +31,6 @@ export class ServerFacade {
   private addBBoxUrl: string = this.apiURL + '/addBbox';
   private getProjectDataUrl: string = this.apiURL + '/getProjectData';
   private getCameraTrapsUrl: string = this.apiURL + '/getCameraTraps';
-
-
 
   //declare auth header for use and assignment with each of the api paths
   private requestHeader = null;
@@ -66,15 +49,11 @@ export class ServerFacade {
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
-    //return this.http.post<ImageQueryResponse>(this.imagesUrl, imageQueryRequest);
-    //with auth header
     return this.http.post<ImageQueryResponse>(this.imagesUrl, imageQueryRequest, this.requestHeader);
   }
 
   public async login(
     loginRequest: LoginRequest,
-    //email: string, 
-    //password: string,
     router: Router
   ): Promise<void> {
     //console.log("About to call sign in function\n");
@@ -96,16 +75,6 @@ export class ServerFacade {
     });
   }
 
-  /*Not Currently Letting Users Register Themselves
-  public register(
-    registerRequest: RegisterRequest
-  ): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(
-      this.registerUrl,
-      JSON.stringify(registerRequest)
-    );
-  }*/
-
   public deleteBoundingBox(deleteBBoxRequest: DeleteBBoxRequest): Observable<HttpEvent<DeleteBBoxResponse>> {
 
     const headerOptions = {
@@ -119,8 +88,6 @@ export class ServerFacade {
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
-
-    //return this.http.post<DeleteBBoxResponse>(this.deleteBBoxUrl, deleteBBoxRequest);
     return this.http.post<DeleteBBoxResponse>(this.deleteBBoxUrl, deleteBBoxRequest, this.requestHeader);
   }
 
@@ -137,8 +104,6 @@ export class ServerFacade {
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
-
-    //return this.http.post<UpdateBBoxResponse>(this.updateBBoxUrl, updateBBoxRequest);
     return this.http.post<UpdateBBoxResponse>(this.updateBBoxUrl, updateBBoxRequest, this.requestHeader);
   }
 
@@ -155,8 +120,6 @@ export class ServerFacade {
     };
     //console.log("Request header object\n");
     //console.log(this.requestHeader);
-
-    //return this.http.post<AddBBoxResponse>(this.addBBoxUrl, addBBoxRequest);
     return this.http.post<AddBBoxResponse>(this.addBBoxUrl, addBBoxRequest, this.requestHeader);
   }
 

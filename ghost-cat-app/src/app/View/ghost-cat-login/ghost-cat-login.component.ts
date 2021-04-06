@@ -14,15 +14,15 @@ export class GhostCatLoginComponent implements OnInit {
 
   constructor(private router: Router, private server: ServerFacade) { }
 
-  ngOnInit(): void { console.log("On log in\n"); }
+  ngOnInit(): void { 
+    //console.log("On log in\n"); 
+  }
 
   goToPage(pageName: string): void {
     this.router.navigate([`${pageName}`]);
   }
 
   public sendLoginRequest(): void {
-    //Password hash no longer needed because cognito hashes with the way the password is sent
-    //const passwordHash = crypto.SHA512(this.password).toString(); 
     const loginRequest: LoginRequest = new LoginRequest(
       this.email,
       this.password

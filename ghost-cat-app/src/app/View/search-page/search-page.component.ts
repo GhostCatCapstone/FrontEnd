@@ -27,7 +27,7 @@ export class SearchPageComponent implements OnInit {
   public temp: string[];
 
   ngOnInit(): void {
-    console.log("On search page\n");
+    //console.log("On search page\n");
     this.searchByAnimal = false;
     this.searchByCamera = false;
     this.searchByDate = false;
