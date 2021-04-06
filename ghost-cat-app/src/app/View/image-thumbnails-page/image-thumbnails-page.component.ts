@@ -183,7 +183,7 @@ export class ImageThumbnailsPageComponent implements OnInit {
 
       let newClasses: ClassValue[] = [];
       for (let j = 0; j < keys.length; ++j) {
-        let val = (<number>values[j]) * 100;
+        let val = (<number>values[j]);
         newClasses.push(new ClassValue(keys[j], val));
       }
       boxes[i].classes = newClasses;

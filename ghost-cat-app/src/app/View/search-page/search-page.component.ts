@@ -78,8 +78,7 @@ export class SearchPageComponent implements OnInit {
     const confidenceLevel: number = this.searchByAnimal
       ? parseInt(
         (<HTMLInputElement>document.getElementById('ConfidenceLevel')).value
-      ) / 100
-      : 0;
+      ) : 0;
 
     if (this.selectedProject == null) {
       alert("Please select a Project to search from");
