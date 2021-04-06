@@ -316,7 +316,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
         if (bb.find(b => b.id == currBoxes[j].id) == undefined) {
           filteredBoxes.push(currBoxes[j]);
         } else {
-          // TODO: this request should also add authentication
           // TODO: this should use data from back end not dummydata 
           let deleteBBoxRequest: DeleteBBoxRequest = new DeleteBBoxRequest(dummyData.researcherID, dummyData.authToken, dummyData.projectID, currBoxes[j].id);
 
@@ -370,7 +369,6 @@ export class ImageThumbnailsPageComponent implements OnInit {
   public selectNewBoxClass(className: string) {
     this.selectBox({ id: this.newBBLookup.id, className: className }, false);
 
-    // TODO: this request should also add authentication
     // TODO: this should use data from back end not from dummydata 
     let addBBoxRequest: AddBBoxRequest = new AddBBoxRequest(
       dummyData.researcherID,
