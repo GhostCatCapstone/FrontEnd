@@ -1,7 +1,11 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CameraLocation } from 'src/app/Model/CameraLocation';
+import { GetProjectDataRequest } from 'src/app/Model/GetProjectDataRequest';
+import { GetProjectDataResponse } from 'src/app/Model/GetProjectDataResponse';
+import { ServerFacade } from 'src/app/Proxy/ServerFacade';
 import { AuthorizationService } from "../../Auth/authorization.service";
+import { catchError } from 'rxjs/operators'
 
 @Component({
   selector: 'app-search-page',
@@ -9,7 +13,7 @@ import { AuthorizationService } from "../../Auth/authorization.service";
   styleUrls: ['./search-page.component.css'],
 })
 export class SearchPageComponent implements OnInit {
-  constructor(private router: Router, private auth: AuthorizationService) { }
+  constructor(private router: Router, private auth: AuthorizationService, private server: ServerFacade,) { }
 
   public searchByAnimal: boolean;
   public searchByCamera: boolean;
@@ -34,7 +38,6 @@ export class SearchPageComponent implements OnInit {
     this.searchByDate = false;
     this.cameraTrapsSelected = [];
     // TODO: get classes and camera trap information from database
-    this.projects = ['project1', 'project2'];
     this.classes = ['Mule Deer', 'Cow', 'Sheep', 'Other'];
     this.cameraTraps = ['site002', 'site004', 'site005', 'site006', 'site008'];
     this.selectedView = 'thumbnails';
@@ -45,6 +48,20 @@ export class SearchPageComponent implements OnInit {
       new CameraLocation('site006', 40.77956, -110.67389),
       new CameraLocation('site008', 40.77956, -110.77389),
     ];
+
+    var username = this.auth.getUserName();
+    const getProjectDataRequest: GetProjectDataRequest = new GetProjectDataRequest(
+      username,
+    )
+
+    this.server
+      .getProjectData(getProjectDataRequest)
+      .pipe(catchError(this.server.handleError('getProjectData')))
+      .subscribe((response: GetProjectDataResponse) => {
+        if (response.success && response.projects.length) {
+          this.projects = response.projects.map((p) => p.projectID);
+        }
+      })
   }
 
 
@@ -72,6 +89,13 @@ export class SearchPageComponent implements OnInit {
       },
     });
   }
+
+  
+    
+
+
+
+
 
   @HostListener('window:keyup', ['$event'])
   keyEvent(event: KeyboardEvent) {
